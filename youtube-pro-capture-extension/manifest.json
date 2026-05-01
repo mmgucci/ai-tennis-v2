@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Pro Clip Capture",
+  "description": "Capture YouTube serve clip metadata directly into pro_videos.json via backend API.",
+  "version": "0.1.0",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "http://localhost:3000/*"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_title": "Open Pro Clip Capture"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  }
+}

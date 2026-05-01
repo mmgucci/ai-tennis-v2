@@ -1,0 +1,14 @@
+{
+  "name": "ai-tennis-codex",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "PYTHON_BIN=../.venv/bin/python npm --workspace backend run dev",
+    "dev:frontend": "npm --workspace frontend run dev",
+    "ingest:pros": "PYTHON_BIN=../.venv/bin/python npm --workspace backend run ingest:pros"
+  }
+}

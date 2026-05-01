@@ -1,0 +1,1 @@
+export const CURRENT_GENERATION_VERSION = 'gen-2026-02-19-12';

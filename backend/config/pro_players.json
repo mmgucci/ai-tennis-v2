@@ -1,0 +1,124 @@
+{
+  "proPlayers": [
+    {
+      "id": "adrian-mannarino",
+      "name": "Adrian Mannarino",
+      "handedness": "left"
+    },
+    {
+      "id": "alex-de-minaur",
+      "name": "Alex de Minaur",
+      "handedness": "right"
+    },
+    {
+      "id": "alexander-zverev",
+      "name": "Alexander Zverev",
+      "handedness": "right"
+    },
+    {
+      "id": "andrey-rublev",
+      "name": "Andrey Rublev",
+      "handedness": "right"
+    },
+    {
+      "id": "ben-shelton",
+      "name": "Ben Shelton",
+      "handedness": "left"
+    },
+    {
+      "id": "carlos-alcaraz",
+      "name": "Carlos Alcaraz",
+      "handedness": "right"
+    },
+    {
+      "id": "casper-ruud",
+      "name": "Casper Ruud",
+      "handedness": "right"
+    },
+    {
+      "id": "dan-evans",
+      "name": "Dan Evans",
+      "handedness": "right"
+    },
+    {
+      "id": "daniil-medvedev",
+      "name": "Daniil Medvedev",
+      "handedness": "right"
+    },
+    {
+      "id": "dominic-thiem",
+      "name": "Dominic Thiem",
+      "handedness": "right"
+    },
+    {
+      "id": "felix-auger-aliassime",
+      "name": "Felix Auger Aliassime",
+      "handedness": "right"
+    },
+    {
+      "id": "gael-monfils",
+      "name": "Gael Monfils",
+      "handedness": "right"
+    },
+    {
+      "id": "grigor-dimitrov",
+      "name": "Grigor Dimitrov",
+      "handedness": "right"
+    },
+    {
+      "id": "holger-rune",
+      "name": "Holger Rune",
+      "handedness": "right"
+    },
+    {
+      "id": "jannik-sinner",
+      "name": "Jannik Sinner",
+      "handedness": "right"
+    },
+    {
+      "id": "karue-sell",
+      "name": "Karue Sell",
+      "handedness": "right"
+    },
+    {
+      "id": "matteo-berrettini",
+      "name": "Matteo Berrettini",
+      "handedness": "right"
+    },
+    {
+      "id": "michael-mmoh",
+      "name": "Michael Mmoh",
+      "handedness": "right"
+    },
+    {
+      "id": "nick-kyrgios",
+      "name": "Nick Kyrgios",
+      "handedness": "right"
+    },
+    {
+      "id": "novak-djokovic",
+      "name": "Novak Djokovic",
+      "handedness": "right"
+    },
+    {
+      "id": "rafael-nadal",
+      "name": "Rafael Nadal",
+      "handedness": "left"
+    },
+    {
+      "id": "soonwoo-kwon",
+      "name": "Soonwoo Kwon",
+      "handedness": "right"
+    },
+    {
+      "id": "stefanos-tsitsipas",
+      "name": "Stefanos Tsitsipas",
+      "handedness": "right"
+    },
+    {
+      "id": "taylor-fritz",
+      "name": "Taylor Fritz",
+      "handedness": "right"
+    }
+  ]
+}

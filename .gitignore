@@ -1,0 +1,31 @@
+.DS_Store
+
+# Dependencies and local environments
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Environment and local logs
+.env
+.env.*
+*.log
+npm-debug.log*
+
+# Build output
+dist/
+build/
+frontend/dist/
+
+# Local video/media data and generated analysis sidecars
+backend/data/uploads/
+backend/data/pros_sources/
+backend/data/pros/*.mp4
+backend/data/pros/*.mov
+backend/data/pros/*.webm
+backend/data/pros/*.tracks.json
+backend/data/pros/*.audio_peaks.json
+backend/data/pros/*.meta.json
+backend/data/pros/*.normalized.*
+backend/data/user_clips/

@@ -1,0 +1,295 @@
+{
+  "schemaVersion": "pro-labels-v1",
+  "labels": {
+    "novak-1": {
+      "contactTimeMs": 2800,
+      "updatedAt": "2026-02-22T13:21:19.860Z",
+      "lowFpsAmbiguous": false,
+      "comments": [
+        {
+          "text": "frames 134,135 track the pose incorrectly.\nframe 136 tracks the wrong arm (tossing arm)\nframe 137,138 also displays wrist at the wrong arm\nthis problem occurs also on later frames prior to the real contact.\nframes 158 to 176 track the correct wrist mostly correct (some inaccuracies when the wrist is hidden behind the body during the follow through of the serve.\ntbd: Adapt logic so that a continuous tracking path that also matches the detection criteria is preferred over a sequence of jumping / missing detection frames, that also happen to match detection criteria.",
+          "createdAt": "2026-02-22T13:18:53.098Z"
+        }
+      ]
+    },
+    "taylor-1": {
+      "contactTimeMs": 3367,
+      "updatedAt": "2026-02-19T23:23:24.850Z",
+      "contactFrame": 202,
+      "lowFpsAmbiguous": false
+    },
+    "jannik-1": {
+      "contactTimeMs": 2583,
+      "updatedAt": "2026-02-19T23:01:55.257Z",
+      "contactFrame": 155,
+      "lowFpsAmbiguous": false
+    },
+    "carlos-1": {
+      "contactTimeMs": 4633,
+      "updatedAt": "2026-02-19T23:44:17.419Z",
+      "contactFrame": 278,
+      "lowFpsAmbiguous": false
+    },
+    "alex-1": {
+      "contactTimeMs": 3617,
+      "updatedAt": "2026-02-19T23:44:39.065Z",
+      "contactFrame": 217,
+      "lowFpsAmbiguous": false
+    },
+    "andrey-1": {
+      "contactTimeMs": 3300,
+      "updatedAt": "2026-02-19T23:02:30.636Z",
+      "contactFrame": 198,
+      "lowFpsAmbiguous": false
+    },
+    "ben-1": {
+      "contactTimeMs": 4100,
+      "updatedAt": "2026-02-19T23:50:45.713Z",
+      "contactFrame": 246,
+      "lowFpsAmbiguous": false
+    },
+    "court-level-view-best-points-tennis-on-another-level-part-6-alcaraz-sinner-nadal-federer-djoko": {
+      "contactFrame": 43,
+      "contactTimeMs": 1435,
+      "updatedAt": "2026-02-21T21:53:04.417Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-view-best-points-tennis-on-another-level-part-6-alcaraz-sinner-nadal-federer-djoko-2": {
+      "contactFrame": 33,
+      "contactTimeMs": 1101,
+      "updatedAt": "2026-02-21T21:53:28.452Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-35": {
+      "contactFrame": 132,
+      "contactTimeMs": 2202,
+      "updatedAt": "2026-02-22T11:27:10.995Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-34": {
+      "contactFrame": 140,
+      "contactTimeMs": 2336,
+      "updatedAt": "2026-02-22T11:27:31.945Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-33": {
+      "contactFrame": 212,
+      "contactTimeMs": 3537,
+      "updatedAt": "2026-02-22T11:27:52.303Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-32": {
+      "contactFrame": 209,
+      "contactTimeMs": 3487,
+      "updatedAt": "2026-02-22T11:28:24.154Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-31": {
+      "contactFrame": 211,
+      "contactTimeMs": 3520,
+      "updatedAt": "2026-02-22T11:36:06.362Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-30": {
+      "contactFrame": 78,
+      "contactTimeMs": 1301,
+      "updatedAt": "2026-02-22T11:36:30.641Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-29": {
+      "contactFrame": 108,
+      "contactTimeMs": 1802,
+      "updatedAt": "2026-02-22T11:37:19.804Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-28": {
+      "contactFrame": 108,
+      "contactTimeMs": 1802,
+      "updatedAt": "2026-02-22T11:37:32.603Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-27": {
+      "contactFrame": 205,
+      "contactTimeMs": 3420,
+      "updatedAt": "2026-02-22T11:38:11.551Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-26": {
+      "contactFrame": 112,
+      "contactTimeMs": 1869,
+      "updatedAt": "2026-02-22T11:38:45.327Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-25": {
+      "contactFrame": 91,
+      "contactTimeMs": 1518,
+      "updatedAt": "2026-02-22T11:39:00.789Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-24": {
+      "contactFrame": 118,
+      "contactTimeMs": 1969,
+      "updatedAt": "2026-02-22T11:39:24.915Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-23": {
+      "contactFrame": 126,
+      "contactTimeMs": 2102,
+      "updatedAt": "2026-02-22T20:39:34.447Z",
+      "lowFpsAmbiguous": false,
+      "comments": [
+        {
+          "text": "The pose detection locks in to another person standing between camera and player. That person is only visible above the waist. Think about extending criteria for identifying player, that the whole body needs to be visible. This may be a real use case also for amateuer player uploads when a coach is standing nearby. Think about ways to identify the player if multiple people are in the video.",
+          "createdAt": "2026-02-22T13:09:37.636Z"
+        },
+        {
+          "text": "Moved to edge set. Revisit when implementing multi-person handling.",
+          "createdAt": "2026-02-22T20:39:34.447Z"
+        }
+      ]
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-22": {
+      "contactFrame": 111,
+      "contactTimeMs": 1852,
+      "updatedAt": "2026-02-22T20:39:09.222Z",
+      "lowFpsAmbiguous": false,
+      "comments": [
+        {
+          "text": "Same as court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-23\nWrong person tracked.",
+          "createdAt": "2026-02-22T13:21:37.408Z"
+        },
+        {
+          "text": "Moved to edge set. Revisit when implementing multi-person handling.",
+          "createdAt": "2026-02-22T20:39:09.222Z"
+        }
+      ]
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-21": {
+      "contactFrame": 180,
+      "contactTimeMs": 3003,
+      "updatedAt": "2026-02-22T11:40:22.920Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-20": {
+      "contactFrame": 168,
+      "contactTimeMs": 2803,
+      "updatedAt": "2026-02-22T11:40:32.839Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-19": {
+      "contactFrame": 81,
+      "contactTimeMs": 1351,
+      "updatedAt": "2026-02-22T11:40:54.113Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-18": {
+      "contactFrame": 84,
+      "contactTimeMs": 1401,
+      "updatedAt": "2026-02-22T11:41:03.327Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-17": {
+      "contactFrame": 93,
+      "contactTimeMs": 1552,
+      "updatedAt": "2026-02-22T20:22:39.661Z",
+      "lowFpsAmbiguous": true,
+      "comments": []
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-16": {
+      "contactFrame": 133,
+      "contactTimeMs": 2219,
+      "updatedAt": "2026-02-22T11:41:57.249Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-15": {
+      "contactFrame": 133,
+      "contactTimeMs": 2219,
+      "updatedAt": "2026-02-22T11:42:09.769Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-14": {
+      "contactFrame": 146,
+      "contactTimeMs": 2436,
+      "updatedAt": "2026-02-22T11:42:20.487Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-13": {
+      "contactFrame": 107,
+      "contactTimeMs": 1785,
+      "updatedAt": "2026-02-22T11:42:45.211Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-12": {
+      "contactFrame": 95,
+      "contactTimeMs": 1585,
+      "updatedAt": "2026-02-22T11:42:57.709Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-11": {
+      "contactFrame": 115,
+      "contactTimeMs": 1919,
+      "updatedAt": "2026-02-22T11:43:41.793Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-10": {
+      "contactFrame": 140,
+      "contactTimeMs": 2336,
+      "updatedAt": "2026-02-22T11:43:53.854Z",
+      "lowFpsAmbiguous": false
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-9": {
+      "contactFrame": 125,
+      "contactTimeMs": 2085,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:50:43.195Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-8": {
+      "contactFrame": 119,
+      "contactTimeMs": 1985,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:51:07.014Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-7": {
+      "contactFrame": 89,
+      "contactTimeMs": 1485,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:51:25.209Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-6": {
+      "contactFrame": 128,
+      "contactTimeMs": 2135,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:51:40.390Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-5": {
+      "contactFrame": 144,
+      "contactTimeMs": 2402,
+      "lowFpsAmbiguous": true,
+      "updatedAt": "2026-02-22T11:52:04.921Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-4": {
+      "contactFrame": 166,
+      "contactTimeMs": 2769,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:52:24.916Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-3": {
+      "contactFrame": 54,
+      "contactTimeMs": 901,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:52:40.359Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-2": {
+      "contactFrame": 83,
+      "contactTimeMs": 1385,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:53:01.091Z"
+    },
+    "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps": {
+      "contactFrame": 124,
+      "contactTimeMs": 2069,
+      "lowFpsAmbiguous": false,
+      "updatedAt": "2026-02-22T11:53:37.021Z"
+    }
+  }
+}

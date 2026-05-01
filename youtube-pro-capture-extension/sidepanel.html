@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pro Clip Capture</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <h1>Pro Clip Capture</h1>
+        <button id="refresh-btn" type="button">Refresh From Tab</button>
+      </header>
+
+      <section id="status" class="status">Checking active tab...</section>
+
+      <form id="capture-form">
+        <label>
+          YouTube URL
+          <input id="youtube-url" type="text" required />
+        </label>
+
+        <label>
+          Title
+          <input id="title" type="text" required />
+        </label>
+
+        <div class="row">
+          <label>
+            Start Time (s)
+            <input id="start-time" type="number" step="0.001" min="0" required />
+          </label>
+          <button id="capture-start-btn" type="button">Set From Current</button>
+        </div>
+
+        <div class="row">
+          <label>
+            End Time (s)
+            <input id="end-time" type="number" step="0.001" min="0" required />
+          </label>
+          <button id="capture-end-btn" type="button">Set From Current</button>
+        </div>
+
+        <label>
+          Stroke Type
+          <select id="stroke-type">
+            <option value="serve" selected>serve</option>
+          </select>
+        </label>
+
+        <label>
+          Player
+          <select id="player-choice">
+            <option value="__add_new__" selected>Add New</option>
+          </select>
+        </label>
+
+        <div id="new-player-fields">
+          <label>
+            Player Name
+            <input id="new-player-name" type="text" placeholder="e.g. Novak Djokovic" />
+          </label>
+
+          <label>
+            Handedness
+            <select id="handedness">
+              <option value="right" selected>right</option>
+              <option value="left">left</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Evaluation Set
+          <select id="evaluation-set">
+            <option value="core" selected>core</option>
+            <option value="edge">edge</option>
+          </select>
+        </label>
+
+        <label>
+          Camera Angle
+          <select id="camera-angle">
+            <option value="behind_server" selected>behind_server</option>
+            <option value="behind_elevated">behind (elevated)</option>
+            <option value="behind_broadcast">behind (broadcast)</option>
+            <option value="front_side_frontside">front side frontside</option>
+            <option value="front_side_backside">front side backside</option>
+            <option value="side_frontside">side_frontside</option>
+            <option value="side_backside">side_backside</option>
+            <option value="behind_side_frontside">behind_side_frontside</option>
+            <option value="behind_side_backside">behind_side_backside</option>
+          </select>
+        </label>
+
+        <label>
+          Court Side
+          <select id="court-side">
+            <option value="deuce" selected>deuce</option>
+            <option value="ad">ad</option>
+          </select>
+        </label>
+
+        <button id="save-btn" type="submit">Save To Pro Config</button>
+      </form>
+
+      <section id="result" class="result"></section>
+    </main>
+    <script src="sidepanel.js"></script>
+  </body>
+  </html>
