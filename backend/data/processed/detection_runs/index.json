@@ -383,6 +383,84 @@
         "maxAbsErrorMs": 267
       },
       "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-16T19-42-48-683Z-95f452d9",
+      "createdAt": "2026-05-16T19:42:48.683Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "f078fb2dcb2f4e21",
+      "diagnosticsFingerprint": "6e19e1027ac72268",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 42,
+        "meanAbsErrorFrames": 0.6904761904761905,
+        "maxAbsErrorFrames": 2,
+        "meanAbsErrorMs": 11.880952380952381,
+        "maxAbsErrorMs": 34
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "meanAbsErrorFrames": 0.7073170731707317,
+          "maxAbsErrorFrames": 2,
+          "meanAbsErrorMs": 12.170731707317072,
+          "maxAbsErrorMs": 34
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 1,
+          "meanAbsErrorFrames": 0,
+          "maxAbsErrorFrames": 0,
+          "meanAbsErrorMs": 0,
+          "maxAbsErrorMs": 0
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-16T19-46-38-544Z-fa936063",
+      "createdAt": "2026-05-16T19:46:38.544Z",
+      "runType": "manual",
+      "autoReason": null,
+      "tagType": "iteration",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": "pose-only-restore-v1",
+      "notes": "Restored pre-object-tracking pose/OpenCV tracker path; reproduces run-2026-02-22T20-39-26-153Z-8f07dc9d metrics.",
+      "logicFingerprint": "f078fb2dcb2f4e21",
+      "diagnosticsFingerprint": "6e19e1027ac72268",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 42,
+        "meanAbsErrorFrames": 0.6904761904761905,
+        "maxAbsErrorFrames": 2,
+        "meanAbsErrorMs": 11.880952380952381,
+        "maxAbsErrorMs": 34
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "meanAbsErrorFrames": 0.7073170731707317,
+          "maxAbsErrorFrames": 2,
+          "meanAbsErrorMs": 12.170731707317072,
+          "maxAbsErrorMs": 34
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 1,
+          "meanAbsErrorFrames": 0,
+          "maxAbsErrorFrames": 0,
+          "meanAbsErrorMs": 0,
+          "maxAbsErrorMs": 0
+        }
+      },
+      "proVideosSignature": null
     }
   ]
 }

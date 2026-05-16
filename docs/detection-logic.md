@@ -17,28 +17,14 @@ When logic changes in that file, update this document in the same change.
 
 ## Tracking Inputs
 
-Track generation now runs two detection passes for fresh `*.tracks.json` sidecars:
+Track generation now runs a pose/OpenCV pass for fresh `*.tracks.json` sidecars:
 
 1. Pose/OpenCV pass (`backend/src/scripts/auto_track.py`)
 - Produces `poseTrack`, pose wrist proxy racket points, and OpenCV/Hough ball candidates.
-- Preserved in sidecars as `poseRacketTrack` and `houghBallTrack` after object augmentation.
+- Writes the canonical `ballTrack`, `racketTrack`, and `poseTrack` consumed by contact detection.
 
-2. CourtSide YOLO object pass (`backend/src/scripts/object_track.py`)
-- Uses the pretrained Ultralytics model `Davidsv/CourtSide-Computer-Vision-v1` by default.
-- Reads the pose sidecar and runs object detection for `tennis_ball` and `racket`.
-- Selects the ball candidate using confidence, temporal continuity, predicted motion, and proximity to the hitting wrist.
-- Selects the racket candidate using confidence plus proximity to the hitting wrist and previous racket point.
-- Writes raw object detections and diagnostics to:
-  - `objectDetections`
-  - `objectFrameDiagnostics`
-  - `objectBallTrack`
-  - `objectRacketTrack`
-  - `objectDetectorMeta`
-
-The canonical tracks consumed by contact detection are fused:
-
-- `ballTrack`: YOLO ball point when available, otherwise OpenCV/Hough ball point.
-- `racketTrack`: YOLO racket point when available, otherwise pose wrist proxy.
+- `ballTrack`: OpenCV/Hough ball point.
+- `racketTrack`: pose wrist proxy / tracker fallback point.
 - `poseTrack`: always retained as the serve/body phase signal.
 
 ## High-Level Flow
@@ -217,7 +203,7 @@ Additional path tag:
 - `audioAssistWeight` defaults from options and is clamped.
 - Confidence threshold for `found` is `0.35`.
 - Tracker-side motion fallback is subject-gated: if subject gate is closed (`allowPoseTrack=false`), motion fallback no longer injects racket points.
-- Fresh track generation attempts both the MediaPipe/OpenCV pose pass and the CourtSide YOLO object pass. If the YOLO runtime/model is unavailable, the sidecar records `objectRuntimeAvailable: false`; with the default retry setting, freshness checks keep treating that sidecar as needing regeneration so installing the dependency/model can upgrade it without a code change.
+- Fresh track generation uses the MediaPipe/OpenCV pose pass only. The CourtSide YOLO object pass is currently not part of the canonical track-generation path.
 
 ## Update Rule
 
