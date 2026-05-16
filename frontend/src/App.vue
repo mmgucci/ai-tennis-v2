@@ -130,6 +130,7 @@ const proDiagLazyActive = ref({});
 const proDiagLazyPinned = ref({});
 const proDiagCardEls = new Map();
 const userClipCardEls = new Map();
+const userClipSeekStates = new Map();
 const userDetCardEls = new Map();
 let userClipVisibilityObserver = null;
 let userDetVisibilityObserver = null;
@@ -1172,6 +1173,7 @@ async function fetchUserVideoEntries() {
   }
   userClipLazyActive.value = nextActive;
   userClipLazyPinned.value = nextPinned;
+  setTimeout(() => bootstrapUserClipLazyObserver(), 0);
 }
 
 async function fetchUserVideoJobs() {
@@ -1355,7 +1357,64 @@ function stopUserClipTimelineRafByKey(key) {
   if (!k) return;
   const rafId = userClipRafIds.value[k];
   if (rafId) cancelAnimationFrame(rafId);
-  userClipRafIds.value = { ...userClipRafIds.value, [k]: null };
+  userClipRafIds.value[k] = null;
+}
+
+function setUserClipDisplayTime(key, sec) {
+  const k = String(key || '');
+  if (!k) return;
+  userClipTimes.value[k] = Math.max(0, Number(sec || 0));
+}
+
+function cancelUserClipSeekState(key) {
+  const k = String(key || '');
+  if (!k) return;
+  const state = userClipSeekStates.get(k);
+  if (state?.rafId) cancelAnimationFrame(state.rafId);
+  userClipSeekStates.delete(k);
+}
+
+function scheduleUserClipSeek(key, sec, options = {}) {
+  const k = String(key || '');
+  const el = userClipVideoEls.value[k];
+  if (!k || !el) return;
+  let state = userClipSeekStates.get(k);
+  if (!state) {
+    state = { rafId: null, targetSec: 0, inFlight: false };
+    userClipSeekStates.set(k, state);
+  }
+  state.targetSec = Math.max(0, Number(sec || 0));
+  if (options.pause !== false) el.pause();
+  if (state.rafId) return;
+  state.rafId = requestAnimationFrame(() => {
+    state.rafId = null;
+    if (state.inFlight) return;
+    const currentEl = userClipVideoEls.value[k];
+    if (!currentEl) {
+      userClipSeekStates.delete(k);
+      return;
+    }
+    const target = state.targetSec;
+    if (Math.abs(Number(currentEl.currentTime || 0) - target) < 0.001) return;
+    state.inFlight = true;
+    try {
+      currentEl.currentTime = target;
+    } catch {
+      state.inFlight = false;
+    }
+  });
+}
+
+function onUserClipSeeked(entry, clip) {
+  const key = userClipKey(entry?.id, clip?.id);
+  const el = userClipVideoEls.value[key];
+  const state = userClipSeekStates.get(key);
+  if (!el || !state) return;
+  state.inFlight = false;
+  setUserClipDisplayTime(key, Number(el.currentTime || 0));
+  if (Math.abs(Number(el.currentTime || 0) - Number(state.targetSec || 0)) > 0.01) {
+    scheduleUserClipSeek(key, state.targetSec, { pause: false });
+  }
 }
 
 function deactivateUserClipLazyItem(key) {
@@ -1371,6 +1430,7 @@ function deactivateUserClipLazyItem(key) {
       // no-op
     }
   }
+  cancelUserClipSeekState(k);
   stopUserClipTimelineRafByKey(k);
   userClipPlaying.value = { ...userClipPlaying.value, [k]: false };
   const nextActive = { ...userClipLazyActive.value };
@@ -1515,10 +1575,7 @@ function onUserClipLoaded(entry, clip) {
   const safeInitSec = Number.isFinite(initSec)
     ? clamp(initSec, 0, Number(el.duration || 0) || initSec)
     : 0;
-  userClipTimes.value = {
-    ...userClipTimes.value,
-    [key]: safeInitSec
-  };
+  setUserClipDisplayTime(key, safeInitSec);
   if (typeof userClipMuted.value[key] !== 'boolean') {
     userClipMuted.value = {
       ...userClipMuted.value,
@@ -1536,17 +1593,14 @@ function onUserClipLoaded(entry, clip) {
     ...userClipPlaying.value,
     [key]: false
   };
-  el.currentTime = safeInitSec;
+  scheduleUserClipSeek(key, safeInitSec, { pause: false });
 }
 
 function onUserClipTimeUpdate(entry, clip) {
   const key = userClipKey(entry?.id, clip?.id);
   const el = userClipVideoEls.value[key];
   if (!el) return;
-  userClipTimes.value = {
-    ...userClipTimes.value,
-    [key]: Number(el.currentTime || 0)
-  };
+  setUserClipDisplayTime(key, Number(el.currentTime || 0));
 }
 
 function startUserClipTimelineRaf(entry, clip) {
@@ -1557,19 +1611,16 @@ function startUserClipTimelineRaf(entry, clip) {
   const tick = () => {
     const el = userClipVideoEls.value[key];
     if (!el || el.paused) {
-      userClipRafIds.value = { ...userClipRafIds.value, [key]: null };
+      userClipRafIds.value[key] = null;
       return;
     }
-    userClipTimes.value = {
-      ...userClipTimes.value,
-      [key]: Number(el.currentTime || 0)
-    };
+    setUserClipDisplayTime(key, Number(el.currentTime || 0));
     const rafId = requestAnimationFrame(tick);
-    userClipRafIds.value = { ...userClipRafIds.value, [key]: rafId };
+    userClipRafIds.value[key] = rafId;
   };
 
   const rafId = requestAnimationFrame(tick);
-  userClipRafIds.value = { ...userClipRafIds.value, [key]: rafId };
+  userClipRafIds.value[key] = rafId;
 }
 
 function stopUserClipTimelineRaf(entry, clip) {
@@ -1638,12 +1689,9 @@ function onUserClipScrub(entry, clip, e) {
   const maxFrame = Math.max(0, Math.round(dur * Math.max(1, fps)));
   const frame = nearestFrameIndex(value, fps, maxFrame);
   const snappedSec = clamp(frame / Math.max(1, fps), 0, dur);
-  userClipTimes.value = {
-    ...userClipTimes.value,
-    [key]: snappedSec
-  };
-  el.currentTime = frameToSecondsForSeek(frame, fps);
-  el.pause();
+  const seekSec = frameToSecondsForSeek(frame, fps);
+  setUserClipDisplayTime(key, snappedSec);
+  scheduleUserClipSeek(key, seekSec);
 }
 
 function stepUserClipFrame(entry, clip, direction) {
@@ -1656,12 +1704,8 @@ function stepUserClipFrame(entry, clip, direction) {
   const currentFrame = secondsToFrameIndex(Number(el.currentTime || 0), fps, maxFrame);
   const nextFrame = Math.max(0, Math.min(maxFrame, currentFrame + Math.sign(direction)));
   const seekSec = frameToSecondsForSeek(nextFrame, fps);
-  userClipTimes.value = {
-    ...userClipTimes.value,
-    [key]: nextFrame / Math.max(1, fps)
-  };
-  el.currentTime = seekSec;
-  el.pause();
+  setUserClipDisplayTime(key, nextFrame / Math.max(1, fps));
+  scheduleUserClipSeek(key, seekSec);
 }
 
 function userDetKey(item) {
@@ -4614,6 +4658,10 @@ onMounted(async () => {
     for (const rafId of Object.values(userClipRafIds.value || {})) {
       if (rafId) cancelAnimationFrame(rafId);
     }
+    for (const state of userClipSeekStates.values()) {
+      if (state?.rafId) cancelAnimationFrame(state.rafId);
+    }
+    userClipSeekStates.clear();
     for (const rafId of Object.values(userDetRafIds.value || {})) {
       if (rafId) cancelAnimationFrame(rafId);
     }
@@ -6178,6 +6226,7 @@ onMounted(async () => {
                 playsinline
                 @loadedmetadata="onUserClipLoaded(entry, clip)"
                 @timeupdate="onUserClipTimeUpdate(entry, clip)"
+                @seeked="onUserClipSeeked(entry, clip)"
                 @play="onUserClipPlay(entry, clip)"
                 @pause="onUserClipPause(entry, clip)"
                 @ended="onUserClipPause(entry, clip)"
