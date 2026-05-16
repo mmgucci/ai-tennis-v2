@@ -12,7 +12,7 @@ When workflow behavior changes, update this file in the same change.
 | Pro normalized clip | `backend/data/pros/<id>.mp4` | `ensureProVideoAvailable` / ffmpeg extract | Clip missing, invalid, metadata mismatch (`clip-meta-v*`) |
 | Pro clip meta + QC | `backend/data/pros/<id>.mp4.meta.json` | Pro clip generation | Regenerated with clip |
 | Pro normalized marker | `backend/data/pros/<id>.mp4.normalized.v2` | Pro clip generation | Regenerated with clip |
-| Tracks cache | `*.tracks.json` | `getOrCreateTracks` | Missing, legacy, config/version mismatch |
+| Tracks cache | `*.tracks.json` | `getOrCreateTracks` (`auto_track.py` + `object_track.py`) | Missing, legacy, config/version mismatch, object detector unavailable retry |
 | Audio peaks cache | `*.audio_peaks.json` | `getOrCreateAudioPeaks` | Missing or audio cache version mismatch |
 | Pro diagnostics cache | `backend/data/processed/pro_diagnostics.latest.json` | `GET /api/debug/pro-detections` | `refresh=1`, signature mismatch, or file removed |
 | Detection run history snapshots | `backend/data/processed/detection_runs/*.json` + `index.json` | auto-created when diagnostics are regenerated; manual tagging via runs endpoint | On regenerated diagnostics (auto, deduped) or explicit run creation |
@@ -41,7 +41,7 @@ When workflow behavior changes, update this file in the same change.
 | Change type | Required action |
 |---|---|
 | Contact detection logic (`contactDetection.js`) | `GET /api/debug/pro-detections?refresh=1` |
-| Tracking logic (`auto_track.py`, `trackingService.js`) | Clear impacted `*.tracks.json` or run `POST /api/debug/clear-derived`, then `GET /api/debug/pro-detections?refresh=1` |
+| Tracking logic (`auto_track.py`, `object_track.py`, `trackingService.js`) | Clear impacted `*.tracks.json` or run `POST /api/debug/clear-derived`, then `GET /api/debug/pro-detections?refresh=1` |
 | Audio peak logic (`audioAnalysis.js`) | Clear impacted `*.audio_peaks.json` or run `POST /api/debug/clear-derived`, then `GET /api/debug/pro-detections?refresh=1` |
 | Clip extraction/transcode logic (`proLibrary.js`) | Bump clip meta version if behavior changed, then `GET /api/debug/pro-detections?refresh=1` |
 | Source download strategy (`ytdlp.js`) | Re-fetch affected source(s): remove affected `pros_sources/src-*.mp4` or run `POST /api/debug/clear-caches`, then regenerate via diagnostics |

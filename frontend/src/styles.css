@@ -575,6 +575,18 @@ video {
   color: #4a0909;
 }
 
+.overlay-pill-yolo-ball.overlay-on {
+  background: rgb(255 245 145 / 90%);
+  border-color: rgb(255 252 190 / 95%);
+  color: #2f2a05;
+}
+
+.overlay-pill-yolo-racket.overlay-on {
+  background: rgb(95 213 255 / 88%);
+  border-color: rgb(170 235 255 / 94%);
+  color: #052c3d;
+}
+
 .overlay-toggle-btn:disabled,
 .overlay-toggle-btn.overlay-unavailable {
   background: transparent;
@@ -874,6 +886,11 @@ video {
   height: 24px;
 }
 
+.event-history {
+  top: -82px;
+  height: 24px;
+}
+
 .event-amateur .event-dot {
   background: #ffbd59;
 }
@@ -885,6 +902,204 @@ video {
 .event-ground .event-dot {
   background: #9df07c;
   box-shadow: 0 0 0 2px rgb(10 26 36 / 65%), 0 0 12px rgb(157 240 124 / 45%);
+}
+
+.event-history .event-dot {
+  background: #f4a7ff;
+  box-shadow: 0 0 0 2px rgb(10 26 36 / 65%), 0 0 12px rgb(244 167 255 / 45%);
+}
+
+.history-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.section-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  text-align: left;
+}
+
+.section-toggle:hover:not(:disabled) {
+  background: rgb(138 224 255 / 8%);
+  box-shadow: none;
+}
+
+.section-toggle-meta {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.history-controls {
+  padding: 0 16px 12px;
+  justify-content: space-between;
+}
+
+.history-summary-grid {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.history-summary-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.8fr) repeat(3, minmax(150px, 1fr));
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid rgb(138 224 255 / 14%);
+  font-size: 13px;
+}
+
+.history-table-wrap {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.history-table th,
+.history-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-top: 1px solid rgb(138 224 255 / 14%);
+  vertical-align: top;
+}
+
+.history-runs-table {
+  min-width: 1160px;
+}
+
+.history-runs-table th {
+  white-space: nowrap;
+}
+
+.history-sort-group {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+
+.history-sort-btn {
+  padding: 3px 6px;
+  border: 1px solid rgb(138 224 255 / 24%);
+  border-radius: 6px;
+  background: rgb(15 42 58 / 70%);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.history-sort-btn:hover:not(:disabled) {
+  background: rgb(138 224 255 / 14%);
+  box-shadow: none;
+}
+
+.history-select-btn {
+  min-width: 86px;
+  padding: 6px 8px;
+}
+
+.history-run-row {
+  cursor: pointer;
+}
+
+.history-run-row:hover {
+  background: rgb(138 224 255 / 7%);
+}
+
+.history-run-row.selected {
+  background: rgb(244 167 255 / 8%);
+}
+
+.history-run-row td .small {
+  display: block;
+  margin-top: 3px;
+}
+
+.history-date-cell {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.history-run-title {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.history-run-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgb(255 189 89 / 18%);
+  color: #ffdba6;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.history-run-detail-row td {
+  background: rgb(8 25 34 / 38%);
+}
+
+.history-run-detail {
+  display: grid;
+  gap: 12px;
+}
+
+.history-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.history-detail-grid div {
+  display: grid;
+  gap: 3px;
+}
+
+.history-detail-grid strong {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.history-detail-notes {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 5%);
+}
+
+.history-clip-delta {
+  padding: 6px 0;
+}
+
+@media (max-width: 760px) {
+  .history-summary-row {
+    grid-template-columns: 1fr;
+  }
+
+  .history-detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .timeline-legend {

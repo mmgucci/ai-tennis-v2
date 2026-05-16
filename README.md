@@ -150,4 +150,5 @@ For the current contact-detection pipeline, fallback ordering, thresholds, and s
 - Tracks debug endpoint + UI toggle for tracking overlay/diagnostics
 - Manual event marker correction UI
 - Historical diagnostics + track playback compare (visual A/B across runs)
+- Ball detector bake-off: keep CourtSide YOLO for racket tracking, test ball-only YOLO/Roboflow/TrackNet lanes against labeled pro clips
 - Scalable storage (object storage + DB)

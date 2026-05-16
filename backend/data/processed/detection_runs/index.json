@@ -360,6 +360,29 @@
         "maxAbsErrorMs": 34
       },
       "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-01T17-32-16-508Z-638231f8",
+      "createdAt": "2026-05-01T17:32:16.509Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "352e37d0c9dba888",
+      "diagnosticsFingerprint": "bdeaa4721f54994f",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 43,
+        "meanAbsErrorFrames": 1.3488372093023255,
+        "maxAbsErrorFrames": 16,
+        "meanAbsErrorMs": 22.767441860465116,
+        "maxAbsErrorMs": 267
+      },
+      "proVideosSignature": null
     }
   ]
 }

@@ -830,6 +830,49 @@ app.get('/api/debug/pro-detection-runs', async (req, res) => {
   res.json({ ok: true, ...list });
 });
 
+app.get('/api/debug/pro-detection-runs/compare', async (req, res) => {
+  try {
+    const baseRunId = String(req.query?.baseRunId || '').trim();
+    const targetRunId = String(req.query?.targetRunId || '').trim();
+    const target = String(req.query?.target || 'current').trim().toLowerCase();
+    const refresh = String(req.query?.refresh || '') === '1';
+    const baselineRun = baseRunId ? await getDetectionRun(baseRunId) : await getStableDetectionRun();
+    if (!baselineRun) {
+      res.status(404).json({ ok: false, error: 'baseline_run_not_found' });
+      return;
+    }
+    const targetRun = targetRunId
+      ? await getDetectionRun(targetRunId)
+      : (target === 'latest' ? await getLatestDetectionRun() : null);
+    const current = targetRun || await getProDetectionsDiagnostics({ refresh });
+    if (!current) {
+      res.status(404).json({ ok: false, error: 'target_run_not_found' });
+      return;
+    }
+    res.json({
+      ok: true,
+      baseline: {
+        runId: baselineRun.runId,
+        logicVersion: baselineRun.logicVersion || null,
+        createdAt: baselineRun.createdAt,
+        summary: baselineRun.summary || {},
+        summaryBySet: baselineRun.summaryBySet || {}
+      },
+      target: {
+        runId: current.runId || null,
+        logicVersion: current.logicVersion || null,
+        createdAt: current.createdAt || current.generatedAt || null,
+        source: current.source || (targetRun ? 'run' : 'current'),
+        summary: current.summary || {},
+        summaryBySet: current.summaryBySet || {}
+      },
+      delta: computeDiagnosticsDelta(current, baselineRun)
+    });
+  } catch (err) {
+    res.status(400).json({ ok: false, error: 'compare_detection_runs_failed', message: err.message });
+  }
+});
+
 app.get('/api/debug/pro-detection-runs/:runId', async (req, res) => {
   const run = await getDetectionRun(req.params.runId);
   if (!run) {

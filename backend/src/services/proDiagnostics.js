@@ -202,20 +202,42 @@ function toNum(x) {
   return Number.isFinite(Number(x)) ? Number(x) : null;
 }
 
+function metricDelta(currentValue, baselineValue) {
+  const after = toNum(currentValue);
+  const before = toNum(baselineValue);
+  return {
+    before,
+    after,
+    delta: before !== null && after !== null ? after - before : null
+  };
+}
+
 export function computeDiagnosticsDelta(current, baseline) {
   if (!current || !baseline) return null;
 
   const curSummary = current.summary || {};
   const baseSummary = baseline.summary || {};
   const summary = {
+    evaluatedWithGroundTruth: metricDelta(
+      curSummary.evaluatedWithGroundTruth,
+      baseSummary.evaluatedWithGroundTruth
+    ),
     evaluatedWithGroundTruthDelta:
       toNum(curSummary.evaluatedWithGroundTruth) !== null && toNum(baseSummary.evaluatedWithGroundTruth) !== null
         ? toNum(curSummary.evaluatedWithGroundTruth) - toNum(baseSummary.evaluatedWithGroundTruth)
         : null,
+    meanAbsErrorFrames: metricDelta(
+      curSummary.meanAbsErrorFrames,
+      baseSummary.meanAbsErrorFrames
+    ),
     meanAbsErrorFramesDelta:
       toNum(curSummary.meanAbsErrorFrames) !== null && toNum(baseSummary.meanAbsErrorFrames) !== null
         ? toNum(curSummary.meanAbsErrorFrames) - toNum(baseSummary.meanAbsErrorFrames)
         : null,
+    maxAbsErrorFrames: metricDelta(
+      curSummary.maxAbsErrorFrames,
+      baseSummary.maxAbsErrorFrames
+    ),
     maxAbsErrorFramesDelta:
       toNum(curSummary.maxAbsErrorFrames) !== null && toNum(baseSummary.maxAbsErrorFrames) !== null
         ? toNum(curSummary.maxAbsErrorFrames) - toNum(baseSummary.maxAbsErrorFrames)
@@ -230,14 +252,26 @@ export function computeDiagnosticsDelta(current, baseline) {
     const c = curBySet[setName] || {};
     const b = baseBySet[setName] || {};
     summaryBySet[setName] = {
+      evaluatedWithGroundTruth: metricDelta(
+        c.evaluatedWithGroundTruth,
+        b.evaluatedWithGroundTruth
+      ),
       evaluatedWithGroundTruthDelta:
         toNum(c.evaluatedWithGroundTruth) !== null && toNum(b.evaluatedWithGroundTruth) !== null
           ? toNum(c.evaluatedWithGroundTruth) - toNum(b.evaluatedWithGroundTruth)
           : null,
+      meanAbsErrorFrames: metricDelta(
+        c.meanAbsErrorFrames,
+        b.meanAbsErrorFrames
+      ),
       meanAbsErrorFramesDelta:
         toNum(c.meanAbsErrorFrames) !== null && toNum(b.meanAbsErrorFrames) !== null
           ? toNum(c.meanAbsErrorFrames) - toNum(b.meanAbsErrorFrames)
           : null,
+      maxAbsErrorFrames: metricDelta(
+        c.maxAbsErrorFrames,
+        b.maxAbsErrorFrames
+      ),
       maxAbsErrorFramesDelta:
         toNum(c.maxAbsErrorFrames) !== null && toNum(b.maxAbsErrorFrames) !== null
           ? toNum(c.maxAbsErrorFrames) - toNum(b.maxAbsErrorFrames)
@@ -259,10 +293,13 @@ export function computeDiagnosticsDelta(current, baseline) {
       title: String(c.title || b.title || ''),
       playerName: (c.playerName || b.playerName || null),
       evaluationSet: String(c.evaluationSet || b.evaluationSet || 'core'),
+      groundTruthContactFrame: toNum(c.groundTruthContactFrame ?? b.groundTruthContactFrame),
       prevDetectedFrame: toNum(b.detectedFrame),
       curDetectedFrame: toNum(c.detectedFrame),
       prevAbsErrorFrames: baseErr,
       curAbsErrorFrames: curErr,
+      detectedFrame: metricDelta(c.detectedFrame, b.detectedFrame),
+      absErrorFrames: metricDelta(c.absErrorFrames, b.absErrorFrames),
       absErrorFramesDelta: (curErr !== null && baseErr !== null) ? (curErr - baseErr) : null
     });
   }

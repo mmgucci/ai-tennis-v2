@@ -76,6 +76,13 @@ export const config = {
     audioAssistWindowMs: parsed?.detection?.audioAssistWindowMs ?? 45,
     audioSampleRate: parsed?.detection?.audioSampleRate ?? 16000
   },
+  tracking: {
+    objectDetectorEnabled: parsed?.tracking?.objectDetectorEnabled ?? true,
+    objectDetectorModel: parsed?.tracking?.objectDetectorModel ?? 'Davidsv/CourtSide-Computer-Vision-v1',
+    objectDetectorConfidence: parsed?.tracking?.objectDetectorConfidence ?? 0.15,
+    objectDetectorImageSize: parsed?.tracking?.objectDetectorImageSize ?? 960,
+    objectDetectorRetryUnavailable: parsed?.tracking?.objectDetectorRetryUnavailable ?? true
+  },
   output: parsed.defaultOutput ?? { aspectRatio: '16:9', resolution: '1280x720', fps: 60 },
   proPlayers: parsed.proPlayers ?? [],
   proVideos: parsed.proVideos ?? []
@@ -90,6 +97,13 @@ export function reloadConfigFromDisk() {
     audioAssistWeight: next?.detection?.audioAssistWeight ?? config.detection?.audioAssistWeight ?? 0.05,
     audioAssistWindowMs: next?.detection?.audioAssistWindowMs ?? config.detection?.audioAssistWindowMs ?? 45,
     audioSampleRate: next?.detection?.audioSampleRate ?? config.detection?.audioSampleRate ?? 16000
+  };
+  config.tracking = {
+    objectDetectorEnabled: next?.tracking?.objectDetectorEnabled ?? config.tracking?.objectDetectorEnabled ?? true,
+    objectDetectorModel: next?.tracking?.objectDetectorModel ?? config.tracking?.objectDetectorModel ?? 'Davidsv/CourtSide-Computer-Vision-v1',
+    objectDetectorConfidence: next?.tracking?.objectDetectorConfidence ?? config.tracking?.objectDetectorConfidence ?? 0.15,
+    objectDetectorImageSize: next?.tracking?.objectDetectorImageSize ?? config.tracking?.objectDetectorImageSize ?? 960,
+    objectDetectorRetryUnavailable: next?.tracking?.objectDetectorRetryUnavailable ?? config.tracking?.objectDetectorRetryUnavailable ?? true
   };
   config.output = next.defaultOutput ?? config.output ?? { aspectRatio: '16:9', resolution: '1280x720', fps: 60 };
   config.proPlayers = next.proPlayers ?? [];

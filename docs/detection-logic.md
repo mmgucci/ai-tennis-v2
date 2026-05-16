@@ -8,12 +8,38 @@ When logic changes in that file, update this document in the same change.
 
 - Primary target: tennis serve contact frame detection.
 - Main inputs:
-  - `ballTrack` (per-frame ball points)
-  - `racketTrack` (per-frame racket-hand/wrist proxy points)
+  - `ballTrack` (per-frame fused ball points; CourtSide YOLO `tennis_ball` when available, OpenCV/Hough fallback otherwise)
+  - `racketTrack` (per-frame fused racket proxy points; CourtSide YOLO `racket` when available, pose wrist fallback otherwise)
   - `poseTrack` (per-frame pose landmarks; used for serve arm plausibility checks)
   - `fps`, `width`, `height`
   - `context`: `strokeType`, `handedness`, `courtSide`
   - optional `audioPeaks` and `detectionOptions`
+
+## Tracking Inputs
+
+Track generation now runs two detection passes for fresh `*.tracks.json` sidecars:
+
+1. Pose/OpenCV pass (`backend/src/scripts/auto_track.py`)
+- Produces `poseTrack`, pose wrist proxy racket points, and OpenCV/Hough ball candidates.
+- Preserved in sidecars as `poseRacketTrack` and `houghBallTrack` after object augmentation.
+
+2. CourtSide YOLO object pass (`backend/src/scripts/object_track.py`)
+- Uses the pretrained Ultralytics model `Davidsv/CourtSide-Computer-Vision-v1` by default.
+- Reads the pose sidecar and runs object detection for `tennis_ball` and `racket`.
+- Selects the ball candidate using confidence, temporal continuity, predicted motion, and proximity to the hitting wrist.
+- Selects the racket candidate using confidence plus proximity to the hitting wrist and previous racket point.
+- Writes raw object detections and diagnostics to:
+  - `objectDetections`
+  - `objectFrameDiagnostics`
+  - `objectBallTrack`
+  - `objectRacketTrack`
+  - `objectDetectorMeta`
+
+The canonical tracks consumed by contact detection are fused:
+
+- `ballTrack`: YOLO ball point when available, otherwise OpenCV/Hough ball point.
+- `racketTrack`: YOLO racket point when available, otherwise pose wrist proxy.
+- `poseTrack`: always retained as the serve/body phase signal.
 
 ## High-Level Flow
 
@@ -24,6 +50,7 @@ When logic changes in that file, update this document in the same change.
 - `isRightHandServeAdSide` is true for `serve + right + ad`.
 - `useBallForContact` defaults to false in project config, so pose-first is the default production path.
 - `audioAssistEnabled` only applies for serves.
+- Even in pose-first mode, `ballTrack` and `racketTrack` may be YOLO-assisted fused tracks.
 
 3. Ball-disabled branch.
 - If `strokeType=serve` and `useBallForContact=false`:
@@ -190,6 +217,7 @@ Additional path tag:
 - `audioAssistWeight` defaults from options and is clamped.
 - Confidence threshold for `found` is `0.35`.
 - Tracker-side motion fallback is subject-gated: if subject gate is closed (`allowPoseTrack=false`), motion fallback no longer injects racket points.
+- Fresh track generation attempts both the MediaPipe/OpenCV pose pass and the CourtSide YOLO object pass. If the YOLO runtime/model is unavailable, the sidecar records `objectRuntimeAvailable: false`; with the default retry setting, freshness checks keep treating that sidecar as needing regeneration so installing the dependency/model can upgrade it without a code change.
 
 ## Update Rule
 

@@ -93,6 +93,22 @@ const proDiagNewPlayerHandedness = ref({});
 const proDiagPlayerSaveBusy = ref({});
 const proDiagnosticsSummary = ref(null);
 const proDiagnosticsSummaryBySet = ref({});
+const proDiagnosticsBaseline = ref(null);
+const proDiagnosticsDelta = ref(null);
+const detectionRuns = ref([]);
+const detectionRunsLoading = ref(false);
+const detectionRunsError = ref('');
+const stableDetectionRunId = ref('');
+const latestDetectionRunId = ref('');
+const selectedHistoryBaselineRunId = ref('');
+const historySectionOpen = ref(false);
+const historyRunSort = ref('created_desc');
+const expandedHistoryRunId = ref('');
+const historyRunDetails = ref({});
+const historyRunDetailsBusy = ref({});
+const historyCompareLoading = ref(false);
+const historyCompareError = ref('');
+const historyCompare = ref(null);
 const proDiagSort = ref('set_asc');
 const proDiagFilterHandedness = ref('all');
 const proDiagFilterPlayer = ref('all');
@@ -277,6 +293,72 @@ const diagnosticCameraAngleFilterOptions = computed(() => {
     values.add(angle);
   }
   return ['all', ...Array.from(values).sort()];
+});
+const historicalDeltaById = computed(() => {
+  const out = new Map();
+  if (!selectedHistoryBaselineRunId.value) return out;
+  const items = historyCompare.value?.delta?.items || [];
+  for (const item of items) {
+    if (item?.id) out.set(String(item.id), item);
+  }
+  return out;
+});
+const historicalSummaryRows = computed(() => {
+  if (!selectedHistoryBaselineRunId.value) return [];
+  const delta = historyCompare.value?.delta;
+  if (!delta) return [];
+  const rows = [{
+    key: 'overall',
+    label: 'Overall',
+    metrics: delta.summary || {}
+  }];
+  const bySet = delta.summaryBySet || {};
+  for (const name of Object.keys(bySet).sort()) {
+    rows.push({
+      key: `set-${name}`,
+      label: `Set ${name}`,
+      metrics: bySet[name] || {}
+    });
+  }
+  return rows;
+});
+const historicalVideoDeltaRows = computed(() => {
+  return Array.from(historicalDeltaById.value.values())
+    .filter((row) => row?.absErrorFrames?.before !== null || row?.absErrorFrames?.after !== null)
+    .sort((a, b) => {
+      const ad = Math.abs(Number(a?.absErrorFrames?.delta || 0));
+      const bd = Math.abs(Number(b?.absErrorFrames?.delta || 0));
+      if (bd !== ad) return bd - ad;
+      return String(a?.id || '').localeCompare(String(b?.id || ''));
+    })
+    .slice(0, 12);
+});
+const sortedDetectionRuns = computed(() => {
+  const runs = [...(detectionRuns.value || [])];
+  const metricValue = (run, setName, metricName) => {
+    const src = setName === 'overall' ? run?.summary : run?.summaryBySet?.[setName];
+    const n = Number(src?.[metricName]);
+    return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY;
+  };
+  const dateValue = (run) => {
+    const t = Date.parse(String(run?.createdAt || ''));
+    return Number.isFinite(t) ? t : 0;
+  };
+  const sort = String(historyRunSort.value || 'created_desc');
+  const metricSort = sort.match(/^(overall|core|edge)_(mean|max)_(asc|desc)$/);
+  runs.sort((a, b) => {
+    if (sort === 'created_asc') return dateValue(a) - dateValue(b);
+    if (metricSort) {
+      const [, setName, metricKind, direction] = metricSort;
+      const metricName = metricKind === 'max' ? 'maxAbsErrorFrames' : 'meanAbsErrorFrames';
+      const av = metricValue(a, setName, metricName);
+      const bv = metricValue(b, setName, metricName);
+      const d = av - bv;
+      return direction === 'desc' ? -d : d;
+    }
+    return dateValue(b) - dateValue(a);
+  });
+  return runs;
 });
 
 function hasGroundTruthValue(item) {
@@ -610,6 +692,103 @@ function formatTime(value) {
   return `${m}:${s}`;
 }
 
+function formatRunLabel(run) {
+  if (!run) return 'unknown run';
+  const created = String(run.createdAt || '').replace('T', ' ').replace(/\.\d+Z$/, 'Z');
+  const tag = run.tagType || run.runType || 'run';
+  const version = run.logicVersion ? ` ${run.logicVersion}` : '';
+  const stable = run.runId === stableDetectionRunId.value ? ' stable' : '';
+  return `${created} | ${tag}${version}${stable}`;
+}
+
+function formatShortRunDate(run) {
+  const created = String(run?.createdAt || '');
+  if (!created) return 'unknown';
+  return created.replace('T', ' ').replace(/\.\d+Z$/, 'Z');
+}
+
+function formatMetricValue(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 'n/a';
+  return Number.isInteger(n) ? String(n) : n.toFixed(2);
+}
+
+function formatMetricBeforeAfter(metric) {
+  if (!metric || typeof metric !== 'object') return 'n/a -> n/a';
+  return `${formatMetricValue(metric.before)} -> ${formatMetricValue(metric.after)}`;
+}
+
+function formatMetricDelta(metric) {
+  const d = Number(metric?.delta);
+  if (!Number.isFinite(d)) return 'n/a';
+  if (d === 0) return '0';
+  return `${d > 0 ? '+' : ''}${Number.isInteger(d) ? d : d.toFixed(2)}`;
+}
+
+function getDeltaStatus(metric, lowerIsBetter = true) {
+  const d = Number(metric?.delta);
+  if (!Number.isFinite(d) || d === 0) return 'unchanged';
+  return lowerIsBetter ? (d < 0 ? 'improved' : 'worse') : (d > 0 ? 'improved' : 'worse');
+}
+
+function getDeltaStatusClass(metric, lowerIsBetter = true) {
+  const status = getDeltaStatus(metric, lowerIsBetter);
+  if (status === 'improved') return 'metric-good';
+  if (status === 'worse') return 'metric-bad';
+  return 'metric-na';
+}
+
+function getRunSetSummary(run, setName = 'overall') {
+  return setName === 'overall' ? (run?.summary || {}) : (run?.summaryBySet?.[setName] || {});
+}
+
+function formatRunScore(run, setName = 'overall', metricName = 'meanAbsErrorFrames') {
+  const summary = getRunSetSummary(run, setName);
+  return formatMetricValue(summary?.[metricName]);
+}
+
+function formatRunEvaluated(run, setName = 'overall') {
+  const summary = getRunSetSummary(run, setName);
+  const n = Number(summary?.evaluatedWithGroundTruth);
+  return Number.isFinite(n) ? String(Math.round(n)) : 'n/a';
+}
+
+function historyRunBadge(run) {
+  if (!run?.runId) return '';
+  if (run.runId === stableDetectionRunId.value) return 'stable';
+  if (run.runId === latestDetectionRunId.value) return 'latest';
+  return run.tagType || run.runType || 'run';
+}
+
+function setHistoryRunSort(sortKey) {
+  const key = String(sortKey || '');
+  if (!key) return;
+  const [setName, metricKind] = key.split('_');
+  const ascKey = `${setName}_${metricKind}_asc`;
+  const descKey = `${setName}_${metricKind}_desc`;
+  if (historyRunSort.value === ascKey) {
+    historyRunSort.value = descKey;
+  } else {
+    historyRunSort.value = ascKey;
+  }
+}
+
+function setHistoryDateSort() {
+  historyRunSort.value = historyRunSort.value === 'created_desc' ? 'created_asc' : 'created_desc';
+}
+
+function historySortIndicator(sortKey) {
+  const sort = String(historyRunSort.value || '');
+  if (sortKey === 'created') {
+    if (sort === 'created_asc') return '↑';
+    if (sort === 'created_desc') return '↓';
+    return '';
+  }
+  if (sort === `${sortKey}_asc`) return '↑';
+  if (sort === `${sortKey}_desc`) return '↓';
+  return '';
+}
+
 function getErrorSeverityClass(absErrorMs) {
   const value = Number(absErrorMs);
   if (!Number.isFinite(value)) return 'metric-na';
@@ -669,6 +848,38 @@ function getClipQcStatusText(item) {
 
 function normalizePlayerName(raw) {
   return String(raw || '').trim().replace(/\s+/g, ' ');
+}
+
+function isGenericSourceTitle(title) {
+  const value = String(title || '').trim().toLowerCase();
+  if (!value) return false;
+  return value.includes('court level atp serve compilation')
+    || value.includes('court level view best points')
+    || value.includes('slow motion')
+    || value.includes('4k 60fps');
+}
+
+function findKnownProVideo(id) {
+  const key = String(id || '').trim();
+  if (!key) return null;
+  return (proVideos.value || []).find((item) => String(item?.id || '') === key) || null;
+}
+
+function getReadableProTitle(item) {
+  const source = item || {};
+  const known = findKnownProVideo(source.id);
+  const title = String(source.title || known?.title || source.id || '').trim();
+  const playerName = normalizePlayerName(source.playerName || known?.playerName);
+  if (playerName && (isGenericSourceTitle(title) || !title)) {
+    return `${playerName} Serve Example`;
+  }
+  return title || (playerName ? `${playerName} Serve Example` : 'Serve Example');
+}
+
+function getReadableProTitleWithId(item) {
+  const id = String(item?.id || '').trim();
+  const title = getReadableProTitle(item);
+  return id ? `${title} (${id})` : title;
 }
 
 function hasMissingPlayer(item) {
@@ -1639,7 +1850,14 @@ function applyUserDetAudioState(item) {
 }
 
 function getUserDetOverlayPrefs(id) {
-  return userDetOverlayPrefs.value[id] || { video: true, ball: false, racket: false, pose: false };
+  return userDetOverlayPrefs.value[id] || {
+    video: true,
+    ball: false,
+    racket: false,
+    pose: false,
+    yoloBall: false,
+    yoloRacket: false
+  };
 }
 
 function getUserDetDetectedSec(item) {
@@ -1720,7 +1938,7 @@ function drawUserDetOverlay(item) {
   const trackPayload = userDetTracks.value[key];
   const tracks = trackPayload?.tracks;
   const prefs = getUserDetOverlayPrefs(key);
-  const needsTracks = Boolean(prefs.ball || prefs.racket || prefs.pose);
+  const needsTracks = Boolean(prefs.ball || prefs.racket || prefs.pose || prefs.yoloBall || prefs.yoloRacket);
   if (!needsTracks) {
     return;
   }
@@ -1744,9 +1962,17 @@ function drawUserDetOverlay(item) {
   }
   const ball = tracks.ballTrack?.[frame] || null;
   const racket = tracks.racketTrack?.[frame] || null;
+  const yoloBall = tracks.objectBallTrack?.[frame] || null;
+  const yoloRacket = tracks.objectRacketTrack?.[frame] || null;
+  const objectDetections = Array.isArray(tracks.objectDetections?.[frame]) ? tracks.objectDetections[frame] : [];
   const poseFrame = tracks.poseTrack?.[frame] || null;
   const poseLandmarks = Array.isArray(poseFrame?.landmarks) ? poseFrame.landmarks : null;
-  userDetOverlayStats.value[key] = { frame, displayFrame };
+  userDetOverlayStats.value[key] = {
+    frame,
+    displayFrame,
+    hasYoloBall: Boolean(yoloBall),
+    hasYoloRacket: Boolean(yoloRacket)
+  };
 
   const sx = w / Math.max(1, metaW);
   const sy = h / Math.max(1, metaH);
@@ -1754,6 +1980,17 @@ function drawUserDetOverlay(item) {
   const by = ball ? ball.y * sy : null;
   const rx = racket ? racket.x * sx : null;
   const ry = racket ? racket.y * sy : null;
+  drawYoloObjects(ctx, {
+    detections: objectDetections,
+    yoloBall,
+    yoloRacket,
+    sx,
+    sy,
+    showBall: prefs.yoloBall,
+    showRacket: prefs.yoloRacket,
+    large: false
+  });
+
   if (prefs.pose && poseLandmarks) {
     ctx.strokeStyle = 'rgba(255, 95, 95, 0.82)';
     ctx.lineWidth = 2;
@@ -2316,6 +2553,8 @@ async function fetchProDiagnostics(forceRefresh = false) {
     proDiagnostics.value = data.items || [];
     proDiagnosticsSummary.value = data.summary || null;
     proDiagnosticsSummaryBySet.value = data.summaryBySet || {};
+    proDiagnosticsBaseline.value = data.baseline || null;
+    proDiagnosticsDelta.value = data.delta || null;
     const nextTimes = {};
     const nextGroundTruth = {};
     const nextLowFpsAmbiguous = { ...proGroundTruthLowFpsAmbiguous.value };
@@ -2387,11 +2626,107 @@ async function fetchProDiagnostics(forceRefresh = false) {
     proDiagLazyPinned.value = nextLazyPinned;
     setTimeout(() => bootstrapDiagLazyObserver(), 0);
     await fetchRefreshStatus();
+    await fetchDetectionRuns();
   } catch (e) {
     proDiagnosticsError.value = e.message;
   } finally {
     proDiagnosticsLoading.value = false;
   }
+}
+
+async function fetchDetectionRuns() {
+  detectionRunsLoading.value = true;
+  detectionRunsError.value = '';
+  try {
+    const res = await fetch('/api/debug/pro-detection-runs');
+    const data = await res.json();
+    if (!res.ok || !data?.ok) {
+      throw new Error(data?.message || data?.error || 'Failed to load detection runs');
+    }
+    detectionRuns.value = Array.isArray(data.runs) ? data.runs : [];
+    stableDetectionRunId.value = data.stableRunId || '';
+    latestDetectionRunId.value = data.latestRunId || '';
+  } catch (e) {
+    detectionRunsError.value = e.message;
+  } finally {
+    detectionRunsLoading.value = false;
+  }
+}
+
+async function fetchHistoryCompare() {
+  const baseRunId = String(selectedHistoryBaselineRunId.value || '').trim();
+  if (!baseRunId) {
+    historyCompare.value = null;
+    return;
+  }
+  historyCompareLoading.value = true;
+  historyCompareError.value = '';
+  try {
+    const res = await fetch(`/api/debug/pro-detection-runs/compare?baseRunId=${encodeURIComponent(baseRunId)}&target=current`);
+    const data = await res.json();
+    if (!res.ok || !data?.ok) {
+      throw new Error(data?.message || data?.error || 'Failed to compare detection runs');
+    }
+    historyCompare.value = data;
+  } catch (e) {
+    historyCompareError.value = e.message;
+  } finally {
+    historyCompareLoading.value = false;
+  }
+}
+
+async function fetchHistoryRunDetails(runId) {
+  const key = String(runId || '').trim();
+  if (!key || historyRunDetails.value[key] || historyRunDetailsBusy.value[key]) return;
+  historyRunDetailsBusy.value = {
+    ...historyRunDetailsBusy.value,
+    [key]: true
+  };
+  try {
+    const res = await fetch(`/api/debug/pro-detection-runs/${encodeURIComponent(key)}`);
+    const data = await res.json();
+    if (!res.ok || !data?.ok) {
+      throw new Error(data?.message || data?.error || `Failed to load run ${key}`);
+    }
+    historyRunDetails.value = {
+      ...historyRunDetails.value,
+      [key]: data.run
+    };
+  } catch (e) {
+    historyCompareError.value = e.message;
+  } finally {
+    historyRunDetailsBusy.value = {
+      ...historyRunDetailsBusy.value,
+      [key]: false
+    };
+  }
+}
+
+async function toggleHistoryRun(run) {
+  const runId = String(run?.runId || '').trim();
+  if (!runId) return;
+  const nextOpen = expandedHistoryRunId.value === runId ? '' : runId;
+  expandedHistoryRunId.value = nextOpen;
+  if (nextOpen) {
+    await fetchHistoryRunDetails(runId);
+  }
+}
+
+function deselectHistoryRun() {
+  selectedHistoryBaselineRunId.value = '';
+  historyCompare.value = null;
+  historyCompareError.value = '';
+}
+
+async function selectHistoryRun(run) {
+  const runId = String(run?.runId || '').trim();
+  if (!runId) return;
+  if (selectedHistoryBaselineRunId.value === runId) {
+    deselectHistoryRun();
+    return;
+  }
+  selectedHistoryBaselineRunId.value = runId;
+  await fetchHistoryCompare();
 }
 
 async function fetchRefreshStatus() {
@@ -2471,6 +2806,34 @@ function getDiagMarkerPct(item) {
   const dur = getDiagDuration(item);
   if (!dur) return 0;
   return Math.max(0, Math.min(100, (getDiagDetectedSec(item) / dur) * 100));
+}
+
+function getHistoricalDeltaItem(item) {
+  return historicalDeltaById.value.get(String(item?.id || '')) || null;
+}
+
+function getHistoricalDetectedFrame(item) {
+  const row = getHistoricalDeltaItem(item);
+  const frame = Number(row?.detectedFrame?.before ?? row?.prevDetectedFrame);
+  return Number.isFinite(frame) ? Math.max(0, Math.round(frame)) : null;
+}
+
+function getHistoricalDetectedSec(item) {
+  const frame = getHistoricalDetectedFrame(item);
+  if (!Number.isFinite(frame)) return null;
+  const fps = Number(item.analysis?.metadata?.fps || 60);
+  return Math.max(0, frame / Math.max(1, fps));
+}
+
+function getHistoricalDetectedPct(item) {
+  const dur = getDiagDuration(item);
+  const sec = getHistoricalDetectedSec(item);
+  if (!dur || !Number.isFinite(sec)) return 0;
+  return Math.max(0, Math.min(100, (sec / dur) * 100));
+}
+
+function hasHistoricalDetectedFrame(item) {
+  return Number.isFinite(getHistoricalDetectedFrame(item));
 }
 
 function getDiagGroundTruthFrame(item) {
@@ -2663,7 +3026,14 @@ function setDiagCanvasRef(id, el) {
 }
 
 function getOverlayPrefs(id) {
-  return proDiagOverlayPrefs.value[id] || { video: true, ball: false, racket: true, pose: true };
+  return proDiagOverlayPrefs.value[id] || {
+    video: true,
+    ball: false,
+    racket: true,
+    pose: true,
+    yoloBall: false,
+    yoloRacket: false
+  };
 }
 
 function hasAnyPoint(track) {
@@ -2686,7 +3056,9 @@ function computeOverlayAvailability(trackPayload) {
       video: true,
       ball: false,
       racket: false,
-      pose: false
+      pose: false,
+      yoloBall: false,
+      yoloRacket: false
     };
   }
   const poseRuntimeAvailable = tracks.poseRuntimeAvailable !== false;
@@ -2695,14 +3067,34 @@ function computeOverlayAvailability(trackPayload) {
     video: true,
     ball: hasAnyPoint(tracks.ballTrack),
     racket: hasAnyPoint(tracks.racketTrack),
-    pose: poseRuntimeAvailable && hasAnyPose(tracks.poseTrack)
+    pose: poseRuntimeAvailable && hasAnyPose(tracks.poseTrack),
+    yoloBall: hasAnyPoint(tracks.objectBallTrack),
+    yoloRacket: hasAnyPoint(tracks.objectRacketTrack)
   };
 }
 
 function getOverlayAvailability(item) {
   const id = item?.id;
-  if (!id) return { known: false, video: true, ball: false, racket: false, pose: false };
-  return proDiagAvailability.value[id] || { known: false, video: true, ball: false, racket: false, pose: false };
+  if (!id) {
+    return {
+      known: false,
+      video: true,
+      ball: false,
+      racket: false,
+      pose: false,
+      yoloBall: false,
+      yoloRacket: false
+    };
+  }
+  return proDiagAvailability.value[id] || {
+    known: false,
+    video: true,
+    ball: false,
+    racket: false,
+    pose: false,
+    yoloBall: false,
+    yoloRacket: false
+  };
 }
 
 function toggleOverlayPart(item, key) {
@@ -2820,6 +3212,9 @@ function drawDiagOverlay(item) {
   const frame = secondsToFrameIndex(video.currentTime, fps, maxFrame);
   const ball = tracks.ballTrack?.[frame] || null;
   const racket = tracks.racketTrack?.[frame] || null;
+  const yoloBall = tracks.objectBallTrack?.[frame] || null;
+  const yoloRacket = tracks.objectRacketTrack?.[frame] || null;
+  const objectDetections = Array.isArray(tracks.objectDetections?.[frame]) ? tracks.objectDetections[frame] : [];
   const poseFrame = tracks.poseTrack?.[frame] || null;
   const poseLandmarks = Array.isArray(poseFrame?.landmarks) ? poseFrame.landmarks : null;
   proDiagOverlayStats.value = {
@@ -2828,6 +3223,8 @@ function drawDiagOverlay(item) {
       frame,
       hasBall: Boolean(ball),
       hasRacket: Boolean(racket),
+      hasYoloBall: Boolean(yoloBall),
+      hasYoloRacket: Boolean(yoloRacket),
       hasPose: Boolean(poseLandmarks?.length),
       poseRuntimeAvailable: tracks.poseRuntimeAvailable !== false,
       source: trackPayload?.source || 'unknown'
@@ -2842,6 +3239,16 @@ function drawDiagOverlay(item) {
   const ry = racket ? racket.y * sy : null;
   const prefs = getOverlayPrefs(id);
   const cinema = Boolean(proDiagCinemaMode.value[id]);
+  drawYoloObjects(ctx, {
+    detections: objectDetections,
+    yoloBall,
+    yoloRacket,
+    sx,
+    sy,
+    showBall: prefs.yoloBall,
+    showRacket: prefs.yoloRacket,
+    large: cinema
+  });
 
   if (prefs.pose && poseLandmarks) {
     ctx.strokeStyle = 'rgba(255, 95, 95, 0.82)';
@@ -3459,10 +3866,66 @@ function getFrameUpperBoundFromTracks(tracks) {
   const lengths = [
     Array.isArray(tracks.ballTrack) ? tracks.ballTrack.length : 0,
     Array.isArray(tracks.racketTrack) ? tracks.racketTrack.length : 0,
-    Array.isArray(tracks.poseTrack) ? tracks.poseTrack.length : 0
+    Array.isArray(tracks.poseTrack) ? tracks.poseTrack.length : 0,
+    Array.isArray(tracks.objectBallTrack) ? tracks.objectBallTrack.length : 0,
+    Array.isArray(tracks.objectRacketTrack) ? tracks.objectRacketTrack.length : 0,
+    Array.isArray(tracks.objectDetections) ? tracks.objectDetections.length : 0
   ].filter((n) => Number.isFinite(n) && n > 0);
   if (!lengths.length) return null;
   return Math.max(0, Math.min(...lengths) - 1);
+}
+
+function drawYoloObjects(ctx, options = {}) {
+  const detections = Array.isArray(options.detections) ? options.detections : [];
+  const sx = Number(options.sx) || 1;
+  const sy = Number(options.sy) || 1;
+  const large = Boolean(options.large);
+  const markerRadius = large ? 9 : 7;
+  const lineWidth = large ? 3 : 2;
+
+  const drawBox = (det, color) => {
+    const box = Array.isArray(det?.box) ? det.box : null;
+    if (!box || box.length < 4) return;
+    const x0 = Number(box[0]) * sx;
+    const y0 = Number(box[1]) * sy;
+    const x1 = Number(box[2]) * sx;
+    const y1 = Number(box[3]) * sy;
+    if (![x0, y0, x1, y1].every(Number.isFinite)) return;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.setLineDash([large ? 8 : 6, large ? 5 : 4]);
+    ctx.strokeRect(x0, y0, Math.max(1, x1 - x0), Math.max(1, y1 - y0));
+    ctx.setLineDash([]);
+  };
+
+  const drawPoint = (point, color, ringColor) => {
+    const x = Number(point?.x) * sx;
+    const y = Number(point?.y) * sy;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    ctx.fillStyle = color;
+    ctx.strokeStyle = ringColor;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.arc(x, y, markerRadius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, y, markerRadius + (large ? 7 : 5), 0, Math.PI * 2);
+    ctx.stroke();
+  };
+
+  if (options.showBall) {
+    for (const det of detections.filter((d) => d?.className === 'tennis_ball')) {
+      drawBox(det, 'rgba(255, 245, 145, 0.92)');
+    }
+    drawPoint(options.yoloBall, 'rgba(255, 245, 145, 0.96)', 'rgba(18, 18, 18, 0.9)');
+  }
+  if (options.showRacket) {
+    for (const det of detections.filter((d) => d?.className === 'racket')) {
+      drawBox(det, 'rgba(95, 213, 255, 0.92)');
+    }
+    drawPoint(options.yoloRacket, 'rgba(95, 213, 255, 0.9)', 'rgba(18, 18, 18, 0.9)');
+  }
 }
 
 function secondsToFrameIndex(seconds, fps, maxFrame = null) {
@@ -4055,6 +4518,16 @@ watch([proDiagSort, proDiagFilterHandedness, proDiagFilterPlayer, proDiagFilterS
   }
 });
 
+watch(selectedHistoryBaselineRunId, async () => {
+  if (activePage.value !== 'diagnostics') return;
+  if (!proDiagnostics.value.length) return;
+  if (!selectedHistoryBaselineRunId.value) {
+    historyCompare.value = null;
+    return;
+  }
+  await fetchHistoryCompare();
+});
+
 onMounted(async () => {
   bootstrapDiagLazyObserver();
   bootstrapUserClipLazyObserver();
@@ -4180,7 +4653,7 @@ onMounted(async () => {
           <label>Pro reference</label>
           <select v-model="selectedPro">
             <option v-for="item in proVideos" :key="item.id" :value="item.id">
-              {{ item.title }} ({{ item.available ? 'local' : 'download on demand' }})
+              {{ getReadableProTitleWithId(item) }} ({{ item.available ? 'local' : 'download on demand' }})
             </option>
           </select>
         </div>
@@ -4208,7 +4681,7 @@ onMounted(async () => {
           <label>Comparison clip (replaces upload)</label>
           <select v-model="selectedAmateurPro">
             <option v-for="item in proVideos" :key="`am-${item.id}`" :value="item.id">
-              {{ item.title }} ({{ item.available ? 'local' : 'download on demand' }})
+              {{ getReadableProTitleWithId(item) }} ({{ item.available ? 'local' : 'download on demand' }})
             </option>
           </select>
         </div>
@@ -4387,11 +4860,11 @@ onMounted(async () => {
       <div v-if="!sessions.length" class="small">No sessions yet.</div>
       <div v-for="session in sessions" :key="session.id" class="session row">
         <div>
-          <strong>{{ session.proVideo.title }}</strong>
+          <strong>{{ getReadableProTitle(session.proVideo) }}</strong>
           <div class="small">
             {{
               session.amateurVideo.source === 'pro_library'
-                ? `vs ${session.amateurVideo.title}`
+                ? `vs ${getReadableProTitle(session.amateurVideo)}`
                 : session.amateurVideo.source === 'upload_library'
                   ? `vs existing upload (${session.amateurVideo.fileName})`
                   : 'vs uploaded footage'
@@ -4436,6 +4909,220 @@ onMounted(async () => {
       </p>
       <p v-if="debugMessage" class="small">{{ debugMessage }}</p>
       <p v-if="proDiagnosticsError" class="error">{{ proDiagnosticsError }}</p>
+    </section>
+
+    <section class="card history-card">
+      <button
+        type="button"
+        class="section-toggle"
+        @click="historySectionOpen = !historySectionOpen"
+      >
+        <span>Historical Diagnostics</span>
+        <span class="section-toggle-meta">
+          {{ detectionRuns.length }} runs
+          {{ historySectionOpen ? 'Hide' : 'Show' }}
+        </span>
+      </button>
+      <template v-if="historySectionOpen">
+        <div class="row diag-filter-row history-controls">
+          <span class="small">Click a column header to sort. Click a run to expand details and compare it to current diagnostics.</span>
+          <button
+            type="button"
+            :disabled="!selectedHistoryBaselineRunId"
+            @click="deselectHistoryRun"
+          >
+            Clear Historical Selection
+          </button>
+          <button
+            type="button"
+            :disabled="detectionRunsLoading"
+            @click="fetchDetectionRuns"
+          >
+            {{ detectionRunsLoading ? 'Loading...' : 'Refresh Runs' }}
+          </button>
+        </div>
+        <p v-if="detectionRunsError || historyCompareError" class="error">
+          {{ detectionRunsError || historyCompareError }}
+        </p>
+        <p v-else-if="!detectionRuns.length" class="small">
+          No historical detection runs yet.
+        </p>
+        <div v-else class="history-table-wrap">
+          <table class="history-table history-runs-table">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>
+                  <button type="button" class="history-sort-btn" @click="setHistoryDateSort">
+                    Date {{ historySortIndicator('created') }}
+                  </button>
+                </th>
+                <th>
+                  Overall
+                  <span class="history-sort-group">
+                    <button type="button" class="history-sort-btn" @click="setHistoryRunSort('overall_mean')">
+                      mean {{ historySortIndicator('overall_mean') }}
+                    </button>
+                    <button type="button" class="history-sort-btn" @click="setHistoryRunSort('overall_max')">
+                      max {{ historySortIndicator('overall_max') }}
+                    </button>
+                  </span>
+                </th>
+                <th>
+                  Core
+                  <span class="history-sort-group">
+                    <button type="button" class="history-sort-btn" @click="setHistoryRunSort('core_mean')">
+                      mean {{ historySortIndicator('core_mean') }}
+                    </button>
+                    <button type="button" class="history-sort-btn" @click="setHistoryRunSort('core_max')">
+                      max {{ historySortIndicator('core_max') }}
+                    </button>
+                  </span>
+                </th>
+                <th>
+                  Edge
+                  <span class="history-sort-group">
+                    <button type="button" class="history-sort-btn" @click="setHistoryRunSort('edge_mean')">
+                      mean {{ historySortIndicator('edge_mean') }}
+                    </button>
+                    <button type="button" class="history-sort-btn" @click="setHistoryRunSort('edge_max')">
+                      max {{ historySortIndicator('edge_max') }}
+                    </button>
+                  </span>
+                </th>
+                <th>Evaluated</th>
+                <th>Compare</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template v-for="run in sortedDetectionRuns" :key="run.runId">
+                <tr
+                  :class="['history-run-row', { selected: selectedHistoryBaselineRunId === run.runId }]"
+                  @click="toggleHistoryRun(run)"
+                >
+                  <td>
+                    <div class="history-run-title">
+                      <strong>{{ run.logicVersion || run.runId }}</strong>
+                      <span class="history-run-badge">{{ historyRunBadge(run) }}</span>
+                    </div>
+                  </td>
+                  <td class="history-date-cell">
+                    {{ formatShortRunDate(run) }}
+                  </td>
+                  <td>
+                    <span :class="getFrameErrorSeverityClass(getRunSetSummary(run, 'overall').meanAbsErrorFrames)">
+                      mean {{ formatRunScore(run, 'overall', 'meanAbsErrorFrames') }}
+                    </span>
+                    <span class="small" :class="getFrameErrorSeverityClass(getRunSetSummary(run, 'overall').maxAbsErrorFrames)">
+                      max {{ formatRunScore(run, 'overall', 'maxAbsErrorFrames') }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :class="getFrameErrorSeverityClass(getRunSetSummary(run, 'core').meanAbsErrorFrames)">
+                      mean {{ formatRunScore(run, 'core', 'meanAbsErrorFrames') }}
+                    </span>
+                    <span class="small" :class="getFrameErrorSeverityClass(getRunSetSummary(run, 'core').maxAbsErrorFrames)">
+                      max {{ formatRunScore(run, 'core', 'maxAbsErrorFrames') }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :class="getFrameErrorSeverityClass(getRunSetSummary(run, 'edge').meanAbsErrorFrames)">
+                      mean {{ formatRunScore(run, 'edge', 'meanAbsErrorFrames') }}
+                    </span>
+                    <span class="small" :class="getFrameErrorSeverityClass(getRunSetSummary(run, 'edge').maxAbsErrorFrames)">
+                      max {{ formatRunScore(run, 'edge', 'maxAbsErrorFrames') }}
+                    </span>
+                  </td>
+                  <td>
+                    {{ formatRunEvaluated(run, 'overall') }}
+                    <span class="small">core {{ formatRunEvaluated(run, 'core') }} / edge {{ formatRunEvaluated(run, 'edge') }}</span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="history-select-btn"
+                      :disabled="historyCompareLoading && selectedHistoryBaselineRunId === run.runId"
+                      @click.stop="selectHistoryRun(run)"
+                    >
+                      {{ selectedHistoryBaselineRunId === run.runId ? 'Deselect' : 'Select' }}
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="expandedHistoryRunId === run.runId" class="history-run-detail-row">
+                  <td colspan="7">
+                    <div v-if="historyRunDetailsBusy[run.runId]" class="small">Loading run details...</div>
+                    <div v-else class="history-run-detail">
+                      <div class="history-detail-grid">
+                        <div><strong>Run id</strong><span>{{ run.runId }}</span></div>
+                        <div><strong>Type</strong><span>{{ run.runType || 'manual' }} / {{ run.tagType || 'iteration' }}</span></div>
+                        <div><strong>Logic fingerprint</strong><span>{{ historyRunDetails[run.runId]?.logicFingerprint || run.logicFingerprint || 'n/a' }}</span></div>
+                        <div><strong>Generation</strong><span>{{ historyRunDetails[run.runId]?.generationVersion || run.generationVersion || 'n/a' }}</span></div>
+                        <div><strong>Parent</strong><span>{{ historyRunDetails[run.runId]?.parentRunId || run.parentRunId || 'none' }}</span></div>
+                        <div><strong>Baseline</strong><span>{{ historyRunDetails[run.runId]?.baselineRunId || 'none' }}</span></div>
+                      </div>
+                      <div v-if="historyRunDetails[run.runId]?.notes" class="small history-detail-notes">
+                        Notes: {{ historyRunDetails[run.runId].notes }}
+                      </div>
+                      <div v-if="historyCompareLoading && selectedHistoryBaselineRunId === run.runId" class="small">
+                        Comparing this run to current diagnostics...
+                      </div>
+                      <div v-else-if="selectedHistoryBaselineRunId === run.runId && historyCompare" class="history-summary-grid">
+                        <div
+                          v-for="row in historicalSummaryRows"
+                          :key="`run-delta-${row.key}`"
+                          class="history-summary-row"
+                        >
+                          <strong>{{ row.label }}</strong>
+                          <span>
+                            meanAbs:
+                            <span :class="getDeltaStatusClass(row.metrics.meanAbsErrorFrames)">
+                              {{ formatMetricBeforeAfter(row.metrics.meanAbsErrorFrames) }}
+                              ({{ formatMetricDelta(row.metrics.meanAbsErrorFrames) }})
+                            </span>
+                          </span>
+                          <span>
+                            maxAbs:
+                            <span :class="getDeltaStatusClass(row.metrics.maxAbsErrorFrames)">
+                              {{ formatMetricBeforeAfter(row.metrics.maxAbsErrorFrames) }}
+                              ({{ formatMetricDelta(row.metrics.maxAbsErrorFrames) }})
+                            </span>
+                          </span>
+                          <span>evaluated: {{ formatMetricBeforeAfter(row.metrics.evaluatedWithGroundTruth) }}</span>
+                        </div>
+                      </div>
+                      <div v-if="historyRunDetails[run.runId]?.items?.length" class="history-table-wrap">
+                        <table class="history-table">
+                          <thead>
+                            <tr>
+                              <th>Clip</th>
+                              <th>Set</th>
+                              <th>Detected</th>
+                              <th>Ground truth</th>
+                              <th>Abs error</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              v-for="item in historyRunDetails[run.runId].items"
+                              :key="`run-detail-${run.runId}-${item.id}`"
+                            >
+                              <td>{{ item.id }}</td>
+                              <td>{{ item.evaluationSet || 'core' }}</td>
+                              <td>{{ formatMetricValue(item.detectedFrame) }}</td>
+                              <td>{{ formatMetricValue(item.groundTruthContactFrame) }}</td>
+                              <td :class="getFrameErrorSeverityClass(item.absErrorFrames)">{{ formatMetricValue(item.absErrorFrames) }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </template>
     </section>
 
     <section class="card">
@@ -4582,7 +5269,7 @@ onMounted(async () => {
           <div :class="['row', 'diag-title-row', { cinema: Boolean(proDiagCinemaMode[item.id]) }]">
             <strong class="diag-title-main">
               <span class="diag-title-copy-group">
-                <span>{{ item.title }} ({{ item.id }})</span>
+                <span>{{ getReadableProTitleWithId(item) }}</span>
                 <button
                   type="button"
                   class="diag-copy-btn"
@@ -4644,7 +5331,7 @@ onMounted(async () => {
                         ]"
                         @click="toggleOverlayPart(item, 'ball')"
                       >
-                        ball
+                        fused ball
                       </button>
                     </span>
                     <span class="overlay-toggle-row">
@@ -4659,7 +5346,7 @@ onMounted(async () => {
                         ]"
                         @click="toggleOverlayPart(item, 'racket')"
                       >
-                        wrist
+                        fused racket
                       </button>
                     </span>
                     <span class="overlay-toggle-row">
@@ -4675,6 +5362,36 @@ onMounted(async () => {
                         @click="toggleOverlayPart(item, 'pose')"
                       >
                         pose
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :disabled="!getOverlayAvailability(item).yoloBall"
+                        :class="[
+                          'overlay-toggle-btn',
+                          'overlay-pill-yolo-ball',
+                          getOverlayPrefs(item.id).yoloBall ? 'overlay-on' : 'overlay-off',
+                          !getOverlayAvailability(item).yoloBall ? 'overlay-unavailable' : ''
+                        ]"
+                        @click="toggleOverlayPart(item, 'yoloBall')"
+                      >
+                        yolo ball
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :disabled="!getOverlayAvailability(item).yoloRacket"
+                        :class="[
+                          'overlay-toggle-btn',
+                          'overlay-pill-yolo-racket',
+                          getOverlayPrefs(item.id).yoloRacket ? 'overlay-on' : 'overlay-off',
+                          !getOverlayAvailability(item).yoloRacket ? 'overlay-unavailable' : ''
+                        ]"
+                        @click="toggleOverlayPart(item, 'yoloRacket')"
+                      >
+                        yolo racket
                       </button>
                     </span>
                   </div>
@@ -4776,6 +5493,15 @@ onMounted(async () => {
                     <span class="event-dot" />
                   </button>
                   <button
+                    v-if="hasHistoricalDetectedFrame(item)"
+                    class="event-marker event-history"
+                    :style="{ left: timelineLeftFromPercent(getHistoricalDetectedPct(item)) }"
+                    :title="`Historical detection @ frame ${getHistoricalDetectedFrame(item)}`"
+                    @click="seekDiagToFrame(item, getHistoricalDetectedFrame(item), getHistoricalDetectedSec(item))"
+                  >
+                    <span class="event-dot" />
+                  </button>
+                  <button
                     v-if="hasDiagGroundTruth(item)"
                     class="event-marker event-pro"
                     :style="{ left: timelineLeftFromPercent(getDiagMarkerPct(item)) }"
@@ -4835,6 +5561,17 @@ onMounted(async () => {
                   </span>
                 </div>
                 <div class="small">Confidence: {{ item.analysis?.event?.confidence?.toFixed?.(3) ?? 'n/a' }}</div>
+                <div v-if="getHistoricalDeltaItem(item)" class="small history-clip-delta">
+                  Historical detected frame:
+                  {{ formatMetricBeforeAfter(getHistoricalDeltaItem(item).detectedFrame) }}
+                  |
+                  Abs error:
+                  <span :class="getDeltaStatusClass(getHistoricalDeltaItem(item).absErrorFrames)">
+                    {{ formatMetricBeforeAfter(getHistoricalDeltaItem(item).absErrorFrames) }}
+                    ({{ formatMetricDelta(getHistoricalDeltaItem(item).absErrorFrames) }},
+                    {{ getDeltaStatus(getHistoricalDeltaItem(item).absErrorFrames) }})
+                  </span>
+                </div>
                 <div class="small">
                   Manual reference contact (ground truth frame):
                   {{
@@ -5185,7 +5922,7 @@ onMounted(async () => {
                   :class="['overlay-toggle-btn', 'overlay-pill-ball', getUserDetOverlayPrefs(item.id).ball ? 'overlay-on' : 'overlay-off']"
                   @click="toggleUserDetOverlay(item, 'ball')"
                 >
-                  ball
+                  fused ball
                 </button>
               </span>
               <span class="overlay-toggle-row">
@@ -5194,7 +5931,7 @@ onMounted(async () => {
                   :class="['overlay-toggle-btn', 'overlay-pill-racket', getUserDetOverlayPrefs(item.id).racket ? 'overlay-on' : 'overlay-off']"
                   @click="toggleUserDetOverlay(item, 'racket')"
                 >
-                  wrist
+                  fused racket
                 </button>
               </span>
               <span class="overlay-toggle-row">
@@ -5204,6 +5941,24 @@ onMounted(async () => {
                   @click="toggleUserDetOverlay(item, 'pose')"
                 >
                   pose
+                </button>
+              </span>
+              <span class="overlay-toggle-row">
+                <button
+                  type="button"
+                  :class="['overlay-toggle-btn', 'overlay-pill-yolo-ball', getUserDetOverlayPrefs(item.id).yoloBall ? 'overlay-on' : 'overlay-off']"
+                  @click="toggleUserDetOverlay(item, 'yoloBall')"
+                >
+                  yolo ball
+                </button>
+              </span>
+              <span class="overlay-toggle-row">
+                <button
+                  type="button"
+                  :class="['overlay-toggle-btn', 'overlay-pill-yolo-racket', getUserDetOverlayPrefs(item.id).yoloRacket ? 'overlay-on' : 'overlay-off']"
+                  @click="toggleUserDetOverlay(item, 'yoloRacket')"
+                >
+                  yolo racket
                 </button>
               </span>
             </div>

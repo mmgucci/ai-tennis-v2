@@ -29,3 +29,4 @@ backend/data/pros/*.audio_peaks.json
 backend/data/pros/*.meta.json
 backend/data/pros/*.normalized.*
 backend/data/user_clips/
+backend/data/models/

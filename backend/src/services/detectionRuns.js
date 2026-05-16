@@ -71,7 +71,21 @@ async function saveDetectionRunsIndex(next) {
 
 export async function listDetectionRuns() {
   const index = await getDetectionRunsIndex();
-  const sorted = [...index.runs].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const hydrated = [];
+  for (const run of index.runs) {
+    if (run?.summaryBySet && typeof run.summaryBySet === 'object') {
+      hydrated.push(run);
+      continue;
+    }
+    // Older index rows did not include per-set summaries; hydrate from the run snapshot.
+    // eslint-disable-next-line no-await-in-loop
+    const full = await getDetectionRun(run.runId);
+    hydrated.push({
+      ...run,
+      summaryBySet: full?.summaryBySet || {}
+    });
+  }
+  const sorted = hydrated.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   return {
     stableRunId: index.stableRunId,
     latestRunId: sorted[0]?.runId || null,
@@ -143,7 +157,8 @@ function buildRunMeta(record) {
     diagnosticsFingerprint: record.diagnosticsFingerprint || null,
     proVideosSignatureHash: record.proVideosSignatureHash || null,
     generationVersion: record.generationVersion || null,
-    summary: record.summary || {}
+    summary: record.summary || {},
+    summaryBySet: record.summaryBySet || {}
   };
 }
 
