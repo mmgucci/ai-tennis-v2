@@ -25,6 +25,7 @@ const userVideoBusy = ref(false);
 const userVideoError = ref('');
 const userVideoInfo = ref('');
 const userClipVideoEls = ref({});
+const userClipCanvasEls = ref({});
 const userClipTimes = ref({});
 const userClipPlaying = ref({});
 const userClipMuted = ref({});
@@ -32,6 +33,10 @@ const userClipVolume = ref({});
 const userClipRafIds = ref({});
 const userClipLazyActive = ref({});
 const userClipLazyPinned = ref({});
+const userClipTracks = ref({});
+const userClipTracksBusy = ref({});
+const userClipOverlayPrefs = ref({});
+const userClipOverlayStats = ref({});
 const userDetectionItems = ref([]);
 const userDetectionLoading = ref(false);
 const userDetectionError = ref('');
@@ -754,6 +759,12 @@ function formatRunEvaluated(run, setName = 'overall') {
   return Number.isFinite(n) ? String(Math.round(n)) : 'n/a';
 }
 
+function formatRunMissed(run, setName = 'overall') {
+  const summary = getRunSetSummary(run, setName);
+  const n = Number(summary?.missedDetections);
+  return Number.isFinite(n) ? String(Math.round(n)) : '0';
+}
+
 function historyRunBadge(run) {
   if (!run?.runId) return '';
   if (run.runId === stableDetectionRunId.value) return 'stable';
@@ -805,6 +816,265 @@ function getFrameErrorSeverityClass(absErrorFrames) {
   if (value <= 2) return 'metric-good';
   if (value <= 5) return 'metric-warn';
   return 'metric-bad';
+}
+
+function formatDiagNumber(value, digits = 3) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 'n/a';
+  return Number.isInteger(n) ? String(n) : n.toFixed(digits).replace(/\.?0+$/, '');
+}
+
+function formatDiagBool(value) {
+  if (value === true) return 'yes';
+  if (value === false) return 'no';
+  return 'n/a';
+}
+
+function formatDiagFrameRange(window) {
+  const start = Number(window?.windowStart);
+  const end = Number(window?.windowEnd);
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return 'n/a';
+  return `${Math.round(start)}-${Math.round(end)}`;
+}
+
+function pushDecisionNode(rows, depth, label, value, status = 'neutral') {
+  if (value === null || value === undefined || value === '') return;
+  rows.push({ depth, label, value, status });
+}
+
+function detectionStatusForScore(value, warnAt = 0.55, goodAt = 0.75) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 'neutral';
+  if (n >= goodAt) return 'pass';
+  if (n >= warnAt) return 'warn';
+  return 'fail';
+}
+
+function pushDecisionLogStep(steps, label, detail = '', status = 'neutral') {
+  if (!label) return;
+  steps.push({ label, detail, status });
+}
+
+function contactPhasePercent(item, frameValue) {
+  const frame = Number(frameValue);
+  const fps = Number(item?.analysis?.metadata?.fps || item?.fps || 60);
+  const duration = Number(item?.analysis?.metadata?.duration || 0);
+  if (!Number.isFinite(frame) || !Number.isFinite(fps) || fps <= 0 || !Number.isFinite(duration) || duration <= 0) {
+    return null;
+  }
+  return (frame / Math.max(1, fps) / duration) * 100;
+}
+
+function framePercentText(item, frameValue) {
+  const pct = contactPhasePercent(item, frameValue);
+  if (!Number.isFinite(pct)) return 'n/a';
+  return `${formatDiagNumber(pct, 1)}%`;
+}
+
+function windowPercentText(item, window) {
+  const startPct = contactPhasePercent(item, window?.windowStart);
+  const endPct = contactPhasePercent(item, window?.windowEnd);
+  if (!Number.isFinite(startPct) || !Number.isFinite(endPct)) return 'n/a';
+  return `${formatDiagNumber(startPct, 1)}%-${formatDiagNumber(endPct, 1)}%`;
+}
+
+function hasUsableBallEvidence(eventDiagnostics) {
+  const d = eventDiagnostics || {};
+  return Boolean(
+    d.searchWindow
+    || Number.isFinite(Number(d.minDistance))
+    || Number.isFinite(Number(d.velocityChange))
+    || Number.isFinite(Number(d.p10Distance))
+    || Number.isFinite(Number(d.p50Distance))
+  );
+}
+
+function getDetectionDecisionLog(item) {
+  const steps = [];
+  const analysis = item?.analysis || {};
+  const event = analysis?.event || {};
+  const d = event?.diagnostics || {};
+  const found = Boolean(event?.found);
+  const mode = String(d.mode || d.path || d.searchWindow?.mode || '').trim();
+  const noBall = !hasUsableBallEvidence(d);
+  const searchWindow = d.searchWindow || d.window || null;
+  const detectedFrame = Number(item?.detectedFrame ?? event?.frame);
+  const rejectedFrame = Number(d.rejectedFrame);
+  const selectedFrame = Number.isFinite(detectedFrame) ? detectedFrame : rejectedFrame;
+  const minConfidence = Number.isFinite(Number(d.minContactConfidence)) ? Number(d.minContactConfidence) : 0.55;
+
+  pushDecisionLogStep(
+    steps,
+    noBall ? 'Ball-guided contact evidence unavailable' : 'Ball-guided contact evidence available',
+    noBall
+      ? 'Detector could not use a confident ball-racket contact path.'
+      : `distance=${formatDiagNumber(d.minDistance, 1)} px, velocity=${formatDiagNumber(d.velocityChange, 2)}`,
+    noBall ? 'warn' : 'pass'
+  );
+
+  if (d.fallbackFrom) {
+    pushDecisionLogStep(steps, 'Fallback triggered', `toss/window reason: ${d.fallbackFrom}`, 'warn');
+  }
+  if (d.switchedFrom) {
+    pushDecisionLogStep(steps, 'Path switched', d.switchedFrom, 'warn');
+  }
+
+  if (mode.includes('pose') || noBall) {
+    const branch = mode === 'pose_extension_primary'
+      ? 'Pose-only wrist/racket extension path'
+      : (mode === 'pose_apex_secondary' ? 'Pose-only wrist/racket apex path' : 'Pose-oriented fallback path');
+    pushDecisionLogStep(steps, branch, `mode=${mode || 'pose fallback'}`, 'warn');
+    if (Number.isFinite(Number(d.extensionScore)) || Number.isFinite(Number(d.recoveryScore))) {
+      pushDecisionLogStep(
+        steps,
+        'Wrist/racket apex detected',
+        `extension=${formatDiagNumber(d.extensionScore)}, recovery=${formatDiagNumber(d.recoveryScore)}, apexHeight=${formatDiagNumber(d.apexHeightScore)}`,
+        detectionStatusForScore(d.selectedFrameScore, 0.5, 0.8)
+      );
+    } else if (Number.isFinite(Number(d.apexHeightScore))) {
+      pushDecisionLogStep(
+        steps,
+        'Wrist/racket apex selected',
+        `apexHeight=${formatDiagNumber(d.apexHeightScore)}, arm=${formatDiagNumber(d.serveArmScore)}`,
+        detectionStatusForScore(d.selectedFrameScore, 0.5, 0.8)
+      );
+    }
+  } else {
+    pushDecisionLogStep(steps, 'Serve toss window detected', searchWindow ? `frames ${formatDiagFrameRange(searchWindow)}, ${windowPercentText(item, searchWindow)} of clip` : 'using main search window', 'pass');
+    pushDecisionLogStep(
+      steps,
+      'Best ball-racket candidate selected',
+      `score=${formatDiagNumber(d.selectedFrameScore)}, expected frame=${Number.isFinite(Number(d.expectedContactIdx)) ? Math.round(Number(d.expectedContactIdx)) : 'n/a'}`,
+      detectionStatusForScore(d.selectedFrameScore, 0.5, 0.8)
+    );
+  }
+
+  if (Number.isFinite(Number(d.serveArmScore)) || Number.isFinite(Number(d.armRejectedCandidates))) {
+    pushDecisionLogStep(
+      steps,
+      'Plausibility check applied',
+      `serve arm=${formatDiagNumber(d.serveArmScore)}, rejected candidates=${Number.isFinite(Number(d.armRejectedCandidates)) ? Math.round(Number(d.armRejectedCandidates)) : 0}`,
+      Number(d.armRejectedCandidates) > 0 ? 'warn' : detectionStatusForScore(d.serveArmScore, 0.4, 0.7)
+    );
+  }
+
+  if (searchWindow) {
+    pushDecisionLogStep(
+      steps,
+      'Contact phase check',
+      `candidate at ${framePercentText(item, selectedFrame)} of clip; accepted window ${windowPercentText(item, searchWindow)}`,
+      Number.isFinite(Number(selectedFrame)) ? 'pass' : 'fail'
+    );
+  } else if (Number.isFinite(Number(selectedFrame))) {
+    pushDecisionLogStep(steps, 'Contact phase check', `candidate at ${framePercentText(item, selectedFrame)} of clip`, 'pass');
+  }
+
+  if (d.audioAssistEnabled !== null && d.audioAssistEnabled !== undefined) {
+    const audioActive = Boolean(d.audioAssistEnabled);
+    const audioScore = Number(d.audioScore);
+    const adjusted = Number(d.audioAdjustedByFrames);
+    pushDecisionLogStep(
+      steps,
+      audioActive ? 'Audio peak checked' : 'Audio peak skipped',
+      audioActive
+        ? `score=${formatDiagNumber(audioScore)}, peaks=${formatDiagNumber(d.audioPeakWindowCount, 0)}, delta=${Number.isFinite(Number(d.audioDeltaMs)) ? `${Math.round(Number(d.audioDeltaMs))} ms` : 'n/a'}${Number.isFinite(adjusted) ? `, adjusted ${Math.round(adjusted)} frames` : ''}`
+        : 'audio assist disabled or not applicable',
+      audioActive ? detectionStatusForScore(audioScore, 0.25, 0.6) : 'neutral'
+    );
+  }
+
+  pushDecisionLogStep(
+    steps,
+    found ? 'Decision: contact detected' : 'Decision: no contact marker',
+    found
+      ? `frame=${Math.round(Number(selectedFrame))}, confidence=${formatDiagNumber(event.confidence)} >= ${formatDiagNumber(minConfidence)}`
+      : `reason=${event.reason || event.noDetectionTag || 'not found'}, confidence=${formatDiagNumber(event.confidence)} / required ${formatDiagNumber(minConfidence)}`,
+    found ? 'pass' : 'fail'
+  );
+
+  if (item?.missedDetection) {
+    pushDecisionLogStep(steps, 'Pro evaluation result', `counted as missed detection, penalty=${formatDiagNumber(item.detectionMissPenaltyFrames)} frames`, 'fail');
+  }
+
+  return steps;
+}
+
+function getDetectionDecisionTree(item) {
+  const rows = [];
+  const analysis = item?.analysis || {};
+  const event = analysis?.event || {};
+  const d = event?.diagnostics || {};
+  const found = Boolean(event?.found);
+  const mode = d.mode || d.path || d.searchWindow?.mode || 'main_ball_guided';
+  const minConfidence = Number(d.minContactConfidence);
+  const confidence = Number(event?.confidence);
+  const detectedFrame = Number(item?.detectedFrame ?? event?.frame);
+  const rejectedFrame = Number(d.rejectedFrame);
+  const finalFrame = Number.isFinite(detectedFrame)
+    ? Math.round(detectedFrame)
+    : (Number.isFinite(rejectedFrame) ? `rejected ${Math.round(rejectedFrame)}` : 'none');
+
+  pushDecisionNode(rows, 0, 'Input profile', `${item?.strokeType || 'serve'} / ${item?.handedness || 'unknown'} / ${item?.courtSide || 'unknown'}`);
+  pushDecisionNode(rows, 1, 'Tracking source', analysis?.trackingSource || 'n/a', analysis?.trackingError ? 'fail' : 'pass');
+  pushDecisionNode(rows, 1, 'Tracking error', analysis?.trackingError || 'none', analysis?.trackingError ? 'fail' : 'pass');
+  pushDecisionNode(rows, 1, 'Audio assist', `${formatDiagBool(analysis?.audioAssist?.enabled)} (${analysis?.audioAssist?.peakCount ?? 0} peaks)`);
+
+  pushDecisionNode(rows, 0, 'Detector path', mode);
+  if (d.fallbackFrom) pushDecisionNode(rows, 1, 'Fallback from', d.fallbackFrom, 'warn');
+  if (d.switchedFrom) pushDecisionNode(rows, 1, 'Switched from', d.switchedFrom, 'warn');
+  if (d.originalFrame !== null && d.originalFrame !== undefined) pushDecisionNode(rows, 1, 'Original frame', Math.round(Number(d.originalFrame)), 'warn');
+
+  const searchWindow = d.searchWindow || d.window || null;
+  if (searchWindow) {
+    pushDecisionNode(rows, 0, 'Search window', formatDiagFrameRange(searchWindow));
+    pushDecisionNode(rows, 1, 'Window mode', searchWindow.mode || mode);
+    pushDecisionNode(rows, 1, 'Apex frame', Number.isFinite(Number(searchWindow.apexIdx)) ? Math.round(Number(searchWindow.apexIdx)) : null);
+    pushDecisionNode(rows, 1, 'Expected contact frame', Number.isFinite(Number(d.expectedContactIdx)) ? Math.round(Number(d.expectedContactIdx)) : null);
+    if (searchWindow.diagnostics) {
+      pushDecisionNode(
+        rows,
+        1,
+        'Toss magnitude',
+        `${formatDiagNumber(searchWindow.diagnostics.tossMagnitude, 1)} px / min ${formatDiagNumber(searchWindow.diagnostics.minTossPixels, 1)} px`,
+        Number(searchWindow.diagnostics.tossMagnitude) >= Number(searchWindow.diagnostics.minTossPixels) ? 'pass' : 'warn'
+      );
+    }
+    if (d.lowToss !== null && d.lowToss !== undefined) pushDecisionNode(rows, 1, 'Low toss adjustment', formatDiagBool(d.lowToss), d.lowToss ? 'warn' : 'pass');
+    if (d.veryLowToss !== null && d.veryLowToss !== undefined) pushDecisionNode(rows, 1, 'Very-low toss adjustment', formatDiagBool(d.veryLowToss), d.veryLowToss ? 'warn' : 'pass');
+  }
+
+  pushDecisionNode(rows, 0, 'Candidate scoring', `selected frame: ${finalFrame}`);
+  pushDecisionNode(rows, 1, 'Selected frame score', formatDiagNumber(d.selectedFrameScore), detectionStatusForScore(d.selectedFrameScore, 0.5, 0.8));
+  pushDecisionNode(rows, 1, 'Ball-racket distance', Number.isFinite(Number(d.minDistance)) ? `${formatDiagNumber(d.minDistance, 1)} px` : null);
+  pushDecisionNode(rows, 1, 'Velocity change', formatDiagNumber(d.velocityChange, 2));
+  pushDecisionNode(rows, 1, 'Racket height score', formatDiagNumber(d.racketHeightScore), detectionStatusForScore(d.racketHeightScore, 0.4, 0.7));
+  pushDecisionNode(rows, 1, 'Serve arm score', formatDiagNumber(d.serveArmScore), detectionStatusForScore(d.serveArmScore, 0.4, 0.7));
+  pushDecisionNode(rows, 1, 'Extension score', formatDiagNumber(d.extensionScore), detectionStatusForScore(d.extensionScore, 0.4, 0.7));
+  pushDecisionNode(rows, 1, 'Recovery score', formatDiagNumber(d.recoveryScore), detectionStatusForScore(d.recoveryScore, 0.4, 0.7));
+  pushDecisionNode(rows, 1, 'Apex height score', formatDiagNumber(d.apexHeightScore), detectionStatusForScore(d.apexHeightScore, 0.4, 0.7));
+  pushDecisionNode(rows, 1, 'Arm-rejected candidates', Number.isFinite(Number(d.armRejectedCandidates)) ? Math.round(Number(d.armRejectedCandidates)) : null, Number(d.armRejectedCandidates) > 0 ? 'warn' : 'pass');
+
+  if (d.audioAssistEnabled !== null && d.audioAssistEnabled !== undefined) {
+    pushDecisionNode(rows, 0, 'Audio contribution', formatDiagBool(d.audioAssistEnabled));
+    pushDecisionNode(rows, 1, 'Audio peaks in phase window', Number.isFinite(Number(d.audioPeakWindowCount)) ? Math.round(Number(d.audioPeakWindowCount)) : null);
+    pushDecisionNode(rows, 1, 'Audio score', formatDiagNumber(d.audioScore), detectionStatusForScore(d.audioScore, 0.25, 0.6));
+    pushDecisionNode(rows, 1, 'Audio effective weight', formatDiagNumber(d.audioEffectiveWeight));
+    pushDecisionNode(rows, 1, 'Selected audio delta', Number.isFinite(Number(d.audioDeltaMs)) ? `${Math.round(Number(d.audioDeltaMs))} ms` : null);
+    pushDecisionNode(rows, 1, 'Audio adjusted by', Number.isFinite(Number(d.audioAdjustedByFrames)) ? `${Math.round(Number(d.audioAdjustedByFrames))} frames` : null, Number(d.audioAdjustedByFrames) ? 'warn' : 'neutral');
+  }
+
+  pushDecisionNode(rows, 0, 'Final decision', found ? 'contact detected' : (event.noDetectionTag || event.reason || 'not detected'), found ? 'pass' : 'fail');
+  pushDecisionNode(rows, 1, 'Confidence', formatDiagNumber(confidence), detectionStatusForScore(confidence, Number.isFinite(minConfidence) ? minConfidence : 0.55, 0.75));
+  pushDecisionNode(rows, 1, 'Required confidence', formatDiagNumber(minConfidence));
+  if (!found) pushDecisionNode(rows, 1, 'Reason', event.reason || 'not found', 'fail');
+  if (d.rejectedConfidence !== null && d.rejectedConfidence !== undefined) {
+    pushDecisionNode(rows, 1, 'Rejected candidate confidence', formatDiagNumber(d.rejectedConfidence), 'fail');
+  }
+  if (item?.missedDetection) {
+    pushDecisionNode(rows, 1, 'Pro evaluation handling', `miss penalty ${formatDiagNumber(item.detectionMissPenaltyFrames)} frames`, 'fail');
+  }
+
+  return rows;
 }
 
 function hasDiagIssue(item) {
@@ -869,7 +1139,9 @@ function findKnownProVideo(id) {
 function getReadableProTitle(item) {
   const source = item || {};
   const known = findKnownProVideo(source.id);
-  const title = String(source.title || known?.title || source.id || '').trim();
+  const displayName = String(source.displayName || '').trim();
+  if (displayName) return displayName;
+  const title = String(source.title || known?.title || '').trim();
   const playerName = normalizePlayerName(source.playerName || known?.playerName);
   if (playerName && (isGenericSourceTitle(title) || !title)) {
     return `${playerName} Serve Example`;
@@ -877,10 +1149,20 @@ function getReadableProTitle(item) {
   return title || (playerName ? `${playerName} Serve Example` : 'Serve Example');
 }
 
-function getReadableProTitleWithId(item) {
+function getCompactProOrdinal(id) {
+  const raw = String(id || '').trim();
+  const match = raw.match(/-(\d+)$/);
+  if (match) return Number(match[1]);
+  return null;
+}
+
+function getReadableProLabel(item) {
+  const explicit = String(item?.displayName || '').trim();
+  if (explicit) return explicit;
   const id = String(item?.id || '').trim();
   const title = getReadableProTitle(item);
-  return id ? `${title} (${id})` : title;
+  const ordinal = getCompactProOrdinal(id);
+  return ordinal ? `${title} #${ordinal}` : title;
 }
 
 function hasMissingPlayer(item) {
@@ -1409,12 +1691,17 @@ function onUserClipSeeked(entry, clip) {
   const key = userClipKey(entry?.id, clip?.id);
   const el = userClipVideoEls.value[key];
   const state = userClipSeekStates.get(key);
-  if (!el || !state) return;
+  if (!el) return;
+  if (!state) {
+    drawUserClipOverlay(entry, clip);
+    return;
+  }
   state.inFlight = false;
   setUserClipDisplayTime(key, Number(el.currentTime || 0));
   if (Math.abs(Number(el.currentTime || 0) - Number(state.targetSec || 0)) > 0.01) {
     scheduleUserClipSeek(key, state.targetSec, { pause: false });
   }
+  drawUserClipOverlay(entry, clip);
 }
 
 function deactivateUserClipLazyItem(key) {
@@ -1433,6 +1720,16 @@ function deactivateUserClipLazyItem(key) {
   cancelUserClipSeekState(k);
   stopUserClipTimelineRafByKey(k);
   userClipPlaying.value = { ...userClipPlaying.value, [k]: false };
+  if (userClipTracks.value[k]) {
+    const nextTracks = { ...userClipTracks.value };
+    delete nextTracks[k];
+    userClipTracks.value = nextTracks;
+  }
+  if (userClipOverlayStats.value[k]) {
+    const nextStats = { ...userClipOverlayStats.value };
+    delete nextStats[k];
+    userClipOverlayStats.value = nextStats;
+  }
   const nextActive = { ...userClipLazyActive.value };
   delete nextActive[k];
   userClipLazyActive.value = nextActive;
@@ -1493,6 +1790,193 @@ function setUserClipVideoRef(key, el) {
   }
 }
 
+function setUserClipCanvasRef(key, el) {
+  const k = String(key || '');
+  if (!k) return;
+  if (el) userClipCanvasEls.value[k] = el;
+  else delete userClipCanvasEls.value[k];
+}
+
+function getUserClipOverlayPrefs(key) {
+  return userClipOverlayPrefs.value[String(key || '')] || {
+    video: true,
+    ball: false,
+    racket: false,
+    pose: false,
+    yoloBall: false,
+    yoloRacket: false
+  };
+}
+
+async function fetchUserClipTracks(entry, clip) {
+  const key = userClipKey(entry?.id, clip?.id);
+  if (!key || userClipTracks.value[key] || userClipTracksBusy.value[key]) return;
+  userClipTracksBusy.value = { ...userClipTracksBusy.value, [key]: true };
+  try {
+    const res = await fetch(`/api/debug/user-tracks/${encodeURIComponent(entry?.id || '')}/${encodeURIComponent(clip?.id || '')}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.message || data?.error || `Failed loading tracks for ${key}`);
+    userClipTracks.value = { ...userClipTracks.value, [key]: data };
+    drawUserClipOverlay(entry, clip);
+  } catch (e) {
+    userVideoError.value = e.message;
+  } finally {
+    userClipTracksBusy.value = { ...userClipTracksBusy.value, [key]: false };
+  }
+}
+
+function drawUserClipOverlay(entry, clip) {
+  const key = userClipKey(entry?.id, clip?.id);
+  if (!key) return;
+  const canvas = userClipCanvasEls.value[key];
+  const video = userClipVideoEls.value[key];
+  if (!canvas || !video) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const w = Math.max(1, Math.round(video.clientWidth));
+  const h = Math.max(1, Math.round(video.clientHeight));
+  if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+  }
+  const canvasParent = canvas.offsetParent || canvas.parentElement;
+  if (canvasParent) {
+    const parentRect = canvasParent.getBoundingClientRect();
+    const videoRect = video.getBoundingClientRect();
+    canvas.style.left = `${Math.max(0, videoRect.left - parentRect.left)}px`;
+    canvas.style.top = `${Math.max(0, videoRect.top - parentRect.top)}px`;
+  } else {
+    canvas.style.left = '0px';
+    canvas.style.top = '0px';
+  }
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  const trackPayload = userClipTracks.value[key];
+  const tracks = trackPayload?.tracks;
+  const prefs = getUserClipOverlayPrefs(key);
+  const needsTracks = Boolean(prefs.ball || prefs.racket || prefs.pose || prefs.yoloBall || prefs.yoloRacket);
+  if (!needsTracks || !tracks) return;
+
+  const metaW = Number(video.videoWidth || trackPayload?.metadata?.width || 1280);
+  const metaH = Number(video.videoHeight || trackPayload?.metadata?.height || 720);
+  const transform = getVideoOverlayTransform(video, metaW, metaH);
+  const displayFps = getUserClipFps(entry);
+  const displayDur = getUserClipDuration(key);
+  const displayMaxFrame = Math.max(0, Math.round(displayDur * Math.max(1, displayFps)));
+  const displayFrame = secondsToFrameIndex(video.currentTime, displayFps, displayMaxFrame);
+  const trackMaxFrame = getFrameUpperBoundFromTracks(tracks);
+  let frame = displayFrame;
+  if (trackMaxFrame >= 0) {
+    if (displayMaxFrame > 0 && trackMaxFrame !== displayMaxFrame) {
+      const ratio = clamp(displayFrame / Math.max(1, displayMaxFrame), 0, 1);
+      frame = Math.round(ratio * trackMaxFrame);
+    } else {
+      frame = Math.min(displayFrame, trackMaxFrame);
+    }
+  }
+
+  const ball = tracks.ballTrack?.[frame] || null;
+  const racket = tracks.racketTrack?.[frame] || null;
+  const yoloBall = tracks.objectBallTrack?.[frame] || null;
+  const yoloRacket = tracks.objectRacketTrack?.[frame] || null;
+  const objectDetections = Array.isArray(tracks.objectDetections?.[frame]) ? tracks.objectDetections[frame] : [];
+  const poseFrame = tracks.poseTrack?.[frame] || null;
+  const poseLandmarks = Array.isArray(poseFrame?.landmarks) ? poseFrame.landmarks : null;
+  userClipOverlayStats.value = {
+    ...userClipOverlayStats.value,
+    [key]: {
+      frame,
+      displayFrame,
+      hasYoloBall: Boolean(yoloBall),
+      hasYoloRacket: Boolean(yoloRacket)
+    }
+  };
+
+  const sx = transform.sx;
+  const sy = transform.sy;
+  const offsetX = transform.offsetX;
+  const offsetY = transform.offsetY;
+  const bx = ball ? offsetX + (ball.x * sx) : null;
+  const by = ball ? offsetY + (ball.y * sy) : null;
+  const rx = racket ? offsetX + (racket.x * sx) : null;
+  const ry = racket ? offsetY + (racket.y * sy) : null;
+  drawYoloObjects(ctx, {
+    detections: objectDetections,
+    yoloBall,
+    yoloRacket,
+    sx,
+    sy,
+    offsetX,
+    offsetY,
+    showBall: prefs.yoloBall,
+    showRacket: prefs.yoloRacket,
+    large: false
+  });
+
+  if (prefs.pose && poseLandmarks) {
+    ctx.strokeStyle = 'rgba(255, 95, 95, 0.82)';
+    ctx.lineWidth = 2;
+    for (const [a, b] of DIAG_POSE_CONNECTIONS) {
+      const la = poseLandmarks[a];
+      const lb = poseLandmarks[b];
+      if (!la || !lb) continue;
+      if (Number(la.v) < 0.35 || Number(lb.v) < 0.35) continue;
+      ctx.beginPath();
+      ctx.moveTo(offsetX + (la.x * sx), offsetY + (la.y * sy));
+      ctx.lineTo(offsetX + (lb.x * sx), offsetY + (lb.y * sy));
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(255, 95, 95, 0.95)';
+    for (const idx of DIAG_POSE_DOT_INDICES) {
+      const p = poseLandmarks[idx];
+      if (!p || Number(p.v) < 0.55) continue;
+      ctx.beginPath();
+      ctx.arc(offsetX + (p.x * sx), offsetY + (p.y * sy), 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  if (prefs.ball && prefs.racket && ball && racket) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(rx, ry);
+    ctx.stroke();
+  }
+  if (prefs.ball && ball) {
+    ctx.fillStyle = '#ffd24a';
+    ctx.beginPath();
+    ctx.arc(bx, by, 6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  if (prefs.racket && racket) {
+    ctx.fillStyle = '#6ef0a6';
+    ctx.beginPath();
+    ctx.arc(rx, ry, 6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function toggleUserClipOverlay(entry, clip, part) {
+  const key = userClipKey(entry?.id, clip?.id);
+  const curr = getUserClipOverlayPrefs(key);
+  const nextValue = !curr[part];
+  userClipOverlayPrefs.value = {
+    ...userClipOverlayPrefs.value,
+    [key]: { ...curr, [part]: nextValue }
+  };
+  if (part !== 'video' && nextValue) {
+    fetchUserClipTracks(entry, clip);
+  }
+  drawUserClipOverlay(entry, clip);
+}
+
 function getUserClipFps(entry) {
   const rawFps = Number(entry?.sourceFps || 30);
   if (!Number.isFinite(rawFps) || rawFps <= 0) return 30;
@@ -1526,6 +2010,40 @@ function getUserClipDetectedFrame(entry, clip) {
   const sec = getUserClipDetectedContactSec(clip);
   if (!Number.isFinite(sec)) return null;
   return Math.max(0, Math.round(sec * Math.max(1, fps)));
+}
+
+function getUserVideoEntryDetectionStatus(entry) {
+  const explicit = String(entry?.detectionStatus || '').trim();
+  if (explicit) return explicit;
+  const clipCount = Array.isArray(entry?.extractedClips) ? entry.extractedClips.length : 0;
+  if (clipCount > 0 || Number(entry?.candidateContactsFound || 0) > 0) return 'serve_contact_detected';
+  return 'no_serve_detected';
+}
+
+function getUserVideoEntryDetectionStatusLabel(entry) {
+  switch (getUserVideoEntryDetectionStatus(entry)) {
+    case 'serve_contact_detected':
+      return 'Contact detected';
+    case 'no_contact_point_detected':
+      return 'No contact point detected';
+    case 'no_serve_detected':
+      return 'No serve detected';
+    default:
+      return 'Detection pending';
+  }
+}
+
+function getUserVideoEntryDetectionStatusClass(entry) {
+  switch (getUserVideoEntryDetectionStatus(entry)) {
+    case 'serve_contact_detected':
+      return 'metric-good';
+    case 'no_contact_point_detected':
+      return 'metric-warn';
+    case 'no_serve_detected':
+      return 'metric-bad';
+    default:
+      return 'metric-na';
+  }
 }
 
 function getUserClipCurrentFrameDisplay(entry, key) {
@@ -1594,6 +2112,7 @@ function onUserClipLoaded(entry, clip) {
     [key]: false
   };
   scheduleUserClipSeek(key, safeInitSec, { pause: false });
+  drawUserClipOverlay(entry, clip);
 }
 
 function onUserClipTimeUpdate(entry, clip) {
@@ -1601,6 +2120,8 @@ function onUserClipTimeUpdate(entry, clip) {
   const el = userClipVideoEls.value[key];
   if (!el) return;
   setUserClipDisplayTime(key, Number(el.currentTime || 0));
+  if (!el.paused) return;
+  drawUserClipOverlay(entry, clip);
 }
 
 function startUserClipTimelineRaf(entry, clip) {
@@ -1615,6 +2136,7 @@ function startUserClipTimelineRaf(entry, clip) {
       return;
     }
     setUserClipDisplayTime(key, Number(el.currentTime || 0));
+    drawUserClipOverlay(entry, clip);
     const rafId = requestAnimationFrame(tick);
     userClipRafIds.value[key] = rafId;
   };
@@ -1692,6 +2214,7 @@ function onUserClipScrub(entry, clip, e) {
   const seekSec = frameToSecondsForSeek(frame, fps);
   setUserClipDisplayTime(key, snappedSec);
   scheduleUserClipSeek(key, seekSec);
+  drawUserClipOverlay(entry, clip);
 }
 
 function stepUserClipFrame(entry, clip, direction) {
@@ -1706,6 +2229,7 @@ function stepUserClipFrame(entry, clip, direction) {
   const seekSec = frameToSecondsForSeek(nextFrame, fps);
   setUserClipDisplayTime(key, nextFrame / Math.max(1, fps));
   scheduleUserClipSeek(key, seekSec);
+  drawUserClipOverlay(entry, clip);
 }
 
 function userDetKey(item) {
@@ -3919,10 +4443,45 @@ function getFrameUpperBoundFromTracks(tracks) {
   return Math.max(0, Math.min(...lengths) - 1);
 }
 
+function getVideoOverlayTransform(video, metaW, metaH) {
+  const w = Math.max(1, Math.round(video?.clientWidth || 0));
+  const h = Math.max(1, Math.round(video?.clientHeight || 0));
+  const sourceW = Math.max(1, Number(metaW) || Number(video?.videoWidth) || 1280);
+  const sourceH = Math.max(1, Number(metaH) || Number(video?.videoHeight) || 720);
+  const objectFit = typeof window !== 'undefined'
+    ? String(window.getComputedStyle(video)?.objectFit || 'fill')
+    : 'fill';
+  if (objectFit === 'contain' || objectFit === 'scale-down') {
+    const scale = Math.min(w / sourceW, h / sourceH);
+    const renderW = sourceW * scale;
+    const renderH = sourceH * scale;
+    const offsetX = (w - renderW) * 0.5;
+    const offsetY = (h - renderH) * 0.5;
+    return {
+      w,
+      h,
+      sx: renderW / sourceW,
+      sy: renderH / sourceH,
+      offsetX,
+      offsetY
+    };
+  }
+  return {
+    w,
+    h,
+    sx: w / sourceW,
+    sy: h / sourceH,
+    offsetX: 0,
+    offsetY: 0
+  };
+}
+
 function drawYoloObjects(ctx, options = {}) {
   const detections = Array.isArray(options.detections) ? options.detections : [];
   const sx = Number(options.sx) || 1;
   const sy = Number(options.sy) || 1;
+  const offsetX = Number(options.offsetX) || 0;
+  const offsetY = Number(options.offsetY) || 0;
   const large = Boolean(options.large);
   const markerRadius = large ? 9 : 7;
   const lineWidth = large ? 3 : 2;
@@ -3930,10 +4489,10 @@ function drawYoloObjects(ctx, options = {}) {
   const drawBox = (det, color) => {
     const box = Array.isArray(det?.box) ? det.box : null;
     if (!box || box.length < 4) return;
-    const x0 = Number(box[0]) * sx;
-    const y0 = Number(box[1]) * sy;
-    const x1 = Number(box[2]) * sx;
-    const y1 = Number(box[3]) * sy;
+    const x0 = offsetX + (Number(box[0]) * sx);
+    const y0 = offsetY + (Number(box[1]) * sy);
+    const x1 = offsetX + (Number(box[2]) * sx);
+    const y1 = offsetY + (Number(box[3]) * sy);
     if (![x0, y0, x1, y1].every(Number.isFinite)) return;
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
@@ -3943,8 +4502,8 @@ function drawYoloObjects(ctx, options = {}) {
   };
 
   const drawPoint = (point, color, ringColor) => {
-    const x = Number(point?.x) * sx;
-    const y = Number(point?.y) * sy;
+    const x = offsetX + (Number(point?.x) * sx);
+    const y = offsetY + (Number(point?.y) * sy);
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     ctx.fillStyle = color;
     ctx.strokeStyle = ringColor;
@@ -4701,7 +5260,7 @@ onMounted(async () => {
           <label>Pro reference</label>
           <select v-model="selectedPro">
             <option v-for="item in proVideos" :key="item.id" :value="item.id">
-              {{ getReadableProTitleWithId(item) }} ({{ item.available ? 'local' : 'download on demand' }})
+              {{ getReadableProLabel(item) }} ({{ item.available ? 'local' : 'download on demand' }})
             </option>
           </select>
         </div>
@@ -4729,7 +5288,7 @@ onMounted(async () => {
           <label>Comparison clip (replaces upload)</label>
           <select v-model="selectedAmateurPro">
             <option v-for="item in proVideos" :key="`am-${item.id}`" :value="item.id">
-              {{ getReadableProTitleWithId(item) }} ({{ item.available ? 'local' : 'download on demand' }})
+              {{ getReadableProLabel(item) }} ({{ item.available ? 'local' : 'download on demand' }})
             </option>
           </select>
         </div>
@@ -5083,7 +5642,10 @@ onMounted(async () => {
                   </td>
                   <td>
                     {{ formatRunEvaluated(run, 'overall') }}
-                    <span class="small">core {{ formatRunEvaluated(run, 'core') }} / edge {{ formatRunEvaluated(run, 'edge') }}</span>
+                    <span class="small">
+                      core {{ formatRunEvaluated(run, 'core') }} / edge {{ formatRunEvaluated(run, 'edge') }} /
+                      missed {{ formatRunMissed(run, 'overall') }}
+                    </span>
                   </td>
                   <td>
                     <button
@@ -5136,6 +5698,7 @@ onMounted(async () => {
                             </span>
                           </span>
                           <span>evaluated: {{ formatMetricBeforeAfter(row.metrics.evaluatedWithGroundTruth) }}</span>
+                          <span>missed: {{ formatMetricBeforeAfter(row.metrics.missedDetections) }}</span>
                         </div>
                       </div>
                       <div v-if="historyRunDetails[run.runId]?.items?.length" class="history-table-wrap">
@@ -5154,7 +5717,10 @@ onMounted(async () => {
                               v-for="item in historyRunDetails[run.runId].items"
                               :key="`run-detail-${run.runId}-${item.id}`"
                             >
-                              <td>{{ item.id }}</td>
+                              <td>
+                                {{ getReadableProLabel(item) }}
+                                <span v-if="!item.displayName && item.id" class="small">raw id available via copy</span>
+                              </td>
                               <td>{{ item.evaluationSet || 'core' }}</td>
                               <td>{{ formatMetricValue(item.detectedFrame) }}</td>
                               <td>{{ formatMetricValue(item.groundTruthContactFrame) }}</td>
@@ -5183,6 +5749,7 @@ onMounted(async () => {
         >
           Set `{{ setName }}`:
           count(with manual reference)={{ proDiagnosticsSummaryBySet[setName].evaluatedWithGroundTruth ?? 0 }},
+          missed={{ proDiagnosticsSummaryBySet[setName].missedDetections ?? 0 }},
           meanAbs(fr)=
           <span :class="getFrameErrorSeverityClass(proDiagnosticsSummaryBySet[setName].meanAbsErrorFrames)">
             {{
@@ -5204,6 +5771,7 @@ onMounted(async () => {
       <div v-if="proDiagnosticsSummary" class="small" style="margin-bottom: 10px;">
         Overall:
         Evaluated with manual reference: {{ proDiagnosticsSummary.evaluatedWithGroundTruth ?? 0 }} |
+        Missed detections: {{ proDiagnosticsSummary.missedDetections ?? 0 }} |
         Mean abs error (frames):
         <span :class="getFrameErrorSeverityClass(proDiagnosticsSummary.meanAbsErrorFrames)">
           {{
@@ -5317,7 +5885,7 @@ onMounted(async () => {
           <div :class="['row', 'diag-title-row', { cinema: Boolean(proDiagCinemaMode[item.id]) }]">
             <strong class="diag-title-main">
               <span class="diag-title-copy-group">
-                <span>{{ getReadableProTitleWithId(item) }}</span>
+                <span>{{ getReadableProLabel(item) }}</span>
                 <button
                   type="button"
                   class="diag-copy-btn"
@@ -5724,13 +6292,38 @@ onMounted(async () => {
                 <div>Clip QC: {{ getClipQcStatusText(item) }}</div>
                 <div>Clip QC checked at: {{ getClipQc(item)?.checkedAt ?? 'n/a' }}</div>
                 <div>Clip QC details: {{ JSON.stringify(getClipQc(item)?.issues || []) }}</div>
+                <div class="decision-log">
+                  <div class="decision-tree-title">Decision log</div>
+                  <div
+                    v-for="(step, idx) in getDetectionDecisionLog(item)"
+                    :key="`decision-log-${item.id}-${idx}`"
+                    :class="['decision-log-step', `decision-${step.status}`]"
+                  >
+                    <span class="decision-log-index">{{ idx + 1 }}</span>
+                    <span class="decision-log-main">
+                      <strong>{{ step.label }}</strong>
+                      <span>{{ step.detail }}</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="decision-tree">
+                  <div class="decision-tree-title">Detection decision</div>
+                  <div
+                    v-for="(row, idx) in getDetectionDecisionTree(item)"
+                    :key="`decision-${item.id}-${idx}`"
+                    :class="['decision-tree-row', `decision-depth-${row.depth}`, `decision-${row.status}`]"
+                  >
+                    <span class="decision-branch"></span>
+                    <span class="decision-label">{{ row.label }}</span>
+                    <span class="decision-value">{{ row.value }}</span>
+                  </div>
+                </div>
                 <div>
                   Track availability:
                   ball={{ getOverlayAvailability(item).ball ? 'yes' : 'no' }},
                   wrist={{ getOverlayAvailability(item).racket ? 'yes' : 'no' }},
                   pose={{ getOverlayAvailability(item).pose ? 'yes' : 'no' }}
                 </div>
-                <div>Diagnostics: {{ JSON.stringify(item.analysis?.event?.diagnostics || {}) }}</div>
               </div>
               <div v-if="proDiagCommentsOpen[item.id]" class="diag-comments-wrap" style="margin-top: 8px;">
                 <div class="diag-comments-list">
@@ -6192,7 +6785,11 @@ onMounted(async () => {
             <div class="small">
               {{ entry.createdAt }} | source duration: {{ Number(entry.sourceDurationSec || 0).toFixed(2) }}s |
               windows scanned: {{ entry.candidateWindowsScanned || 0 }} |
-              contacts found: {{ entry.candidateContactsFound || 0 }}
+              contacts found: {{ entry.candidateContactsFound || 0 }} |
+              status:
+              <span :class="getUserVideoEntryDetectionStatusClass(entry)">
+                {{ getUserVideoEntryDetectionStatusLabel(entry) }}
+              </span>
             </div>
           </div>
         </div>
@@ -6218,19 +6815,90 @@ onMounted(async () => {
               hand: {{ clip.detectedHandedness || 'n/a' }}
             </div>
             <template v-if="isUserClipLazyActive(userClipKey(entry.id, clip.id))">
-              <video
-                :ref="(el) => setUserClipVideoRef(userClipKey(entry.id, clip.id), el)"
-                class="user-clip-video"
-                :src="clip.publicUrl"
-                preload="metadata"
-                playsinline
-                @loadedmetadata="onUserClipLoaded(entry, clip)"
-                @timeupdate="onUserClipTimeUpdate(entry, clip)"
-                @seeked="onUserClipSeeked(entry, clip)"
-                @play="onUserClipPlay(entry, clip)"
-                @pause="onUserClipPause(entry, clip)"
-                @ended="onUserClipPause(entry, clip)"
-              />
+              <div class="diag-video-wrap">
+                <div class="diag-overlay-badge small">
+                  <div class="overlay-left">
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :class="['overlay-toggle-btn', 'overlay-pill-video', getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).video ? 'overlay-on' : 'overlay-off']"
+                        @click="toggleUserClipOverlay(entry, clip, 'video')"
+                      >
+                        video
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :class="['overlay-toggle-btn', 'overlay-pill-ball', getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).ball ? 'overlay-on' : 'overlay-off']"
+                        @click="toggleUserClipOverlay(entry, clip, 'ball')"
+                      >
+                        fused ball
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :class="['overlay-toggle-btn', 'overlay-pill-racket', getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).racket ? 'overlay-on' : 'overlay-off']"
+                        @click="toggleUserClipOverlay(entry, clip, 'racket')"
+                      >
+                        fused racket
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :class="['overlay-toggle-btn', 'overlay-pill-pose', getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).pose ? 'overlay-on' : 'overlay-off']"
+                        @click="toggleUserClipOverlay(entry, clip, 'pose')"
+                      >
+                        pose
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :class="['overlay-toggle-btn', 'overlay-pill-yolo-ball', getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).yoloBall ? 'overlay-on' : 'overlay-off']"
+                        @click="toggleUserClipOverlay(entry, clip, 'yoloBall')"
+                      >
+                        yolo ball
+                      </button>
+                    </span>
+                    <span class="overlay-toggle-row">
+                      <button
+                        type="button"
+                        :class="['overlay-toggle-btn', 'overlay-pill-yolo-racket', getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).yoloRacket ? 'overlay-on' : 'overlay-off']"
+                        @click="toggleUserClipOverlay(entry, clip, 'yoloRacket')"
+                      >
+                        yolo racket
+                      </button>
+                    </span>
+                  </div>
+                  <div class="overlay-right">
+                    <span v-if="userClipTracksBusy[userClipKey(entry.id, clip.id)]">loading tracks...</span>
+                    <span>frame {{ userClipOverlayStats[userClipKey(entry.id, clip.id)]?.frame ?? getUserClipCurrentFrameDisplay(entry, userClipKey(entry.id, clip.id)) }}</span>
+                  </div>
+                </div>
+                <div class="diag-media user-det-media">
+                  <video
+                    :ref="(el) => setUserClipVideoRef(userClipKey(entry.id, clip.id), el)"
+                    class="user-clip-video"
+                    :class="{ 'diag-video-hidden': !getUserClipOverlayPrefs(userClipKey(entry.id, clip.id)).video }"
+                    :src="clip.publicUrl"
+                    preload="metadata"
+                    playsinline
+                    @loadedmetadata="onUserClipLoaded(entry, clip)"
+                    @timeupdate="onUserClipTimeUpdate(entry, clip)"
+                    @seeked="onUserClipSeeked(entry, clip)"
+                    @play="onUserClipPlay(entry, clip)"
+                    @pause="onUserClipPause(entry, clip)"
+                    @ended="onUserClipPause(entry, clip)"
+                  />
+                  <canvas
+                    :ref="(el) => setUserClipCanvasRef(userClipKey(entry.id, clip.id), el)"
+                    class="diag-overlay user-det-overlay"
+                  />
+                </div>
+              </div>
               <div class="timeline-shell">
                 <div class="timeline-meta">
                   <span>

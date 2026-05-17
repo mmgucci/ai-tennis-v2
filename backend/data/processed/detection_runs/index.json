@@ -1,6 +1,6 @@
 {
   "schemaVersion": "detection-runs-v1",
-  "stableRunId": "run-2026-02-22T19-56-56-863Z-a94a45a5",
+  "stableRunId": "run-2026-05-17T19-51-41-263Z-fda9c6f3",
   "runs": [
     {
       "runId": "run-2026-02-21T12-50-31-191Z-81895ad9",
@@ -458,6 +458,288 @@
           "maxAbsErrorFrames": 0,
           "meanAbsErrorMs": 0,
           "maxAbsErrorMs": 0
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-16T20-32-35-140Z-241a02b2",
+      "createdAt": "2026-05-16T20:32:35.140Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "352e37d0c9dba888",
+      "diagnosticsFingerprint": "bdeaa4721f54994f",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 43,
+        "meanAbsErrorFrames": 1.3488372093023255,
+        "maxAbsErrorFrames": 16,
+        "meanAbsErrorMs": 22.767441860465116,
+        "maxAbsErrorMs": 267
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "meanAbsErrorFrames": 1.3902439024390243,
+          "maxAbsErrorFrames": 16,
+          "meanAbsErrorMs": 23.48780487804878,
+          "maxAbsErrorMs": 267
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 2,
+          "meanAbsErrorFrames": 0.5,
+          "maxAbsErrorFrames": 1,
+          "meanAbsErrorMs": 8,
+          "maxAbsErrorMs": 16
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-16T20-51-39-909Z-dce71d69",
+      "createdAt": "2026-05-16T20:51:39.910Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "6ea0ae26e402fd55",
+      "diagnosticsFingerprint": "bdeaa4721f54994f",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 43,
+        "meanAbsErrorFrames": 1.3488372093023255,
+        "maxAbsErrorFrames": 16,
+        "meanAbsErrorMs": 22.767441860465116,
+        "maxAbsErrorMs": 267
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "meanAbsErrorFrames": 1.3902439024390243,
+          "maxAbsErrorFrames": 16,
+          "meanAbsErrorMs": 23.48780487804878,
+          "maxAbsErrorMs": 267
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 2,
+          "meanAbsErrorFrames": 0.5,
+          "maxAbsErrorFrames": 1,
+          "meanAbsErrorMs": 8,
+          "maxAbsErrorMs": 16
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-16T21-10-02-572Z-d761cb87",
+      "createdAt": "2026-05-16T21:10:02.573Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "e375c134e7c7c4b1",
+      "diagnosticsFingerprint": "b12c1a41fb6a9cd7",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 40,
+        "meanAbsErrorFrames": 2.1,
+        "maxAbsErrorFrames": 27,
+        "meanAbsErrorMs": 35.4,
+        "maxAbsErrorMs": 451
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 39,
+          "meanAbsErrorFrames": 1.4615384615384615,
+          "maxAbsErrorFrames": 14,
+          "meanAbsErrorMs": 24.743589743589745,
+          "maxAbsErrorMs": 233
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 1,
+          "meanAbsErrorFrames": 27,
+          "maxAbsErrorFrames": 27,
+          "meanAbsErrorMs": 451,
+          "maxAbsErrorMs": 451
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-17T05-22-33-987Z-b2170061",
+      "createdAt": "2026-05-17T05:22:33.988Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "00f17b3f463530e4",
+      "diagnosticsFingerprint": "b12c1a41fb6a9cd7",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 40,
+        "meanAbsErrorFrames": 2.1,
+        "maxAbsErrorFrames": 27,
+        "meanAbsErrorMs": 35.4,
+        "maxAbsErrorMs": 451
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 39,
+          "meanAbsErrorFrames": 1.4615384615384615,
+          "maxAbsErrorFrames": 14,
+          "meanAbsErrorMs": 24.743589743589745,
+          "maxAbsErrorMs": 233
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 1,
+          "meanAbsErrorFrames": 27,
+          "maxAbsErrorFrames": 27,
+          "meanAbsErrorMs": 451,
+          "maxAbsErrorMs": 451
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-17T05-36-56-459Z-2f9a91c9",
+      "createdAt": "2026-05-17T05:36:56.459Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "00f17b3f463530e4",
+      "diagnosticsFingerprint": "267dece523a4990b",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 44,
+        "missedDetections": 4,
+        "meanAbsErrorFrames": 22.181818181818183,
+        "maxAbsErrorFrames": 254,
+        "meanAbsErrorMs": 370.3181818181818,
+        "maxAbsErrorMs": 4238
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "missedDetections": 2,
+          "meanAbsErrorFrames": 13.78048780487805,
+          "maxAbsErrorFrames": 254,
+          "meanAbsErrorMs": 230.26829268292684,
+          "maxAbsErrorMs": 4238
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 3,
+          "missedDetections": 2,
+          "meanAbsErrorFrames": 137,
+          "maxAbsErrorFrames": 240,
+          "meanAbsErrorMs": 2284.3333333333335,
+          "maxAbsErrorMs": 4000
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-17T19-31-37-456Z-7d191262",
+      "createdAt": "2026-05-17T19:31:37.457Z",
+      "runType": "auto",
+      "autoReason": "manual_refresh",
+      "tagType": "auto",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": null,
+      "notes": null,
+      "logicFingerprint": "bdfcfda9b131ef09",
+      "diagnosticsFingerprint": "c391914f23047d90",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 44,
+        "missedDetections": 2,
+        "meanAbsErrorFrames": 7.681818181818182,
+        "maxAbsErrorFrames": 168,
+        "meanAbsErrorMs": 128.45454545454547,
+        "maxAbsErrorMs": 2803
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "missedDetections": 0,
+          "meanAbsErrorFrames": 0.6341463414634146,
+          "maxAbsErrorFrames": 2,
+          "meanAbsErrorMs": 10.902439024390244,
+          "maxAbsErrorMs": 33
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 3,
+          "missedDetections": 2,
+          "meanAbsErrorFrames": 104,
+          "maxAbsErrorFrames": 168,
+          "meanAbsErrorMs": 1735,
+          "maxAbsErrorMs": 2803
+        }
+      },
+      "proVideosSignature": null
+    },
+    {
+      "runId": "run-2026-05-17T19-51-41-263Z-fda9c6f3",
+      "createdAt": "2026-05-17T19:51:41.263Z",
+      "runType": "manual",
+      "autoReason": null,
+      "tagType": "iteration",
+      "branchName": null,
+      "parentRunId": null,
+      "logicVersion": "pose-racket-only-v1",
+      "notes": "Hard cut from ball tracking for serve contact detection. Uses pose/racket apex primary path with optional audio assist; best core result so far, with known edge misses on two Novak clips containing foreground occlusion.",
+      "logicFingerprint": "bdfcfda9b131ef09",
+      "diagnosticsFingerprint": "c391914f23047d90",
+      "proVideosSignatureHash": "41877319a3a9f917",
+      "generationVersion": "gen-2026-02-19-12",
+      "summary": {
+        "evaluatedWithGroundTruth": 44,
+        "missedDetections": 2,
+        "meanAbsErrorFrames": 7.681818181818182,
+        "maxAbsErrorFrames": 168,
+        "meanAbsErrorMs": 128.45454545454547,
+        "maxAbsErrorMs": 2803
+      },
+      "summaryBySet": {
+        "core": {
+          "evaluatedWithGroundTruth": 41,
+          "missedDetections": 0,
+          "meanAbsErrorFrames": 0.6341463414634146,
+          "maxAbsErrorFrames": 2,
+          "meanAbsErrorMs": 10.902439024390244,
+          "maxAbsErrorMs": 33
+        },
+        "edge": {
+          "evaluatedWithGroundTruth": 3,
+          "missedDetections": 2,
+          "meanAbsErrorFrames": 104,
+          "maxAbsErrorFrames": 168,
+          "meanAbsErrorMs": 1735,
+          "maxAbsErrorMs": 2803
         }
       },
       "proVideosSignature": null

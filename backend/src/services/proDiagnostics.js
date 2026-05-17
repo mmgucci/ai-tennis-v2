@@ -28,6 +28,7 @@ function proVideosSignature() {
 function createSummaryAccumulator() {
   return {
     errorCount: 0,
+    missedDetectionCount: 0,
     sumAbsErrorFrames: 0,
     maxAbsErrorFrames: 0,
     sumAbsErrorMs: 0,
@@ -38,11 +39,41 @@ function createSummaryAccumulator() {
 function finalizeSummary(acc) {
   return {
     evaluatedWithGroundTruth: acc.errorCount,
+    missedDetections: acc.missedDetectionCount,
     meanAbsErrorFrames: acc.errorCount > 0 ? acc.sumAbsErrorFrames / acc.errorCount : null,
     maxAbsErrorFrames: acc.errorCount > 0 ? acc.maxAbsErrorFrames : null,
     meanAbsErrorMs: acc.errorCount > 0 ? acc.sumAbsErrorMs / acc.errorCount : null,
     maxAbsErrorMs: acc.errorCount > 0 ? acc.maxAbsErrorMs : null
   };
+}
+
+function compactVideoOrdinal(id) {
+  const raw = String(id || '').trim();
+  if (!raw) return null;
+  const match = raw.match(/-(\d+)$/);
+  if (match) return Number(match[1]);
+  const shortMatch = raw.match(/^[a-z]+-(\d+)$/i);
+  if (shortMatch) return Number(shortMatch[1]);
+  return null;
+}
+
+function isGenericSourceTitle(title) {
+  const value = String(title || '').trim().toLowerCase();
+  if (!value) return false;
+  return value.includes('court level atp serve compilation')
+    || value.includes('court level view best points')
+    || value.includes('slow motion')
+    || value.includes('4k 60fps');
+}
+
+function readableProVideoName(pro) {
+  const playerName = String(pro?.playerName || '').trim();
+  const title = String(pro?.title || '').trim();
+  const base = playerName && (isGenericSourceTitle(title) || !title)
+    ? `${playerName} Serve Example`
+    : (title || (playerName ? `${playerName} Serve Example` : 'Serve Example'));
+  const ordinal = compactVideoOrdinal(pro?.id);
+  return ordinal ? `${base} #${ordinal}` : base;
 }
 
 export async function buildProDetectionsDiagnostics() {
@@ -90,17 +121,30 @@ export async function buildProDetectionsDiagnostics() {
       let absErrorMs = null;
       let errorFrames = null;
       let absErrorFrames = null;
-      if (hasGroundTruth && Number.isFinite(detectedFrame)) {
-        errorFrames = detectedFrame - groundTruthContactFrame;
-        absErrorFrames = Math.abs(errorFrames);
-        errorMs = detectedMs - groundTruthContactMs;
-        absErrorMs = Math.abs(errorMs);
+      let detectionMissPenaltyFrames = null;
+      let detectionMissPenaltyMs = null;
+      const missedDetection = hasGroundTruth && !Number.isFinite(detectedFrame);
+      if (hasGroundTruth) {
+        if (Number.isFinite(detectedFrame)) {
+          errorFrames = detectedFrame - groundTruthContactFrame;
+          absErrorFrames = Math.abs(errorFrames);
+          errorMs = detectedMs - groundTruthContactMs;
+          absErrorMs = Math.abs(errorMs);
+        } else {
+          const clipFrameCount = Math.max(1, Math.round(Number(analysis?.metadata?.duration || 0) * Math.max(1, fps)));
+          detectionMissPenaltyFrames = clipFrameCount;
+          detectionMissPenaltyMs = Math.round((clipFrameCount / Math.max(1, fps)) * 1000);
+          absErrorFrames = detectionMissPenaltyFrames;
+          absErrorMs = detectionMissPenaltyMs;
+        }
         overall.errorCount += 1;
+        if (missedDetection) overall.missedDetectionCount += 1;
         overall.sumAbsErrorFrames += absErrorFrames;
         overall.maxAbsErrorFrames = Math.max(overall.maxAbsErrorFrames, absErrorFrames);
         overall.sumAbsErrorMs += absErrorMs;
         overall.maxAbsErrorMs = Math.max(overall.maxAbsErrorMs, absErrorMs);
         bySet[evaluationSet].errorCount += 1;
+        if (missedDetection) bySet[evaluationSet].missedDetectionCount += 1;
         bySet[evaluationSet].sumAbsErrorFrames += absErrorFrames;
         bySet[evaluationSet].maxAbsErrorFrames = Math.max(bySet[evaluationSet].maxAbsErrorFrames, absErrorFrames);
         bySet[evaluationSet].sumAbsErrorMs += absErrorMs;
@@ -109,6 +153,7 @@ export async function buildProDetectionsDiagnostics() {
 
       items.push({
         id: pro.id,
+        displayName: readableProVideoName(pro),
         title: pro.title,
         playerName: pro.playerName || null,
         evaluationSet,
@@ -127,6 +172,9 @@ export async function buildProDetectionsDiagnostics() {
         groundTruthContactMs: hasGroundTruth ? groundTruthContactMs : null,
         detectedFrame: Number.isFinite(detectedFrame) ? detectedFrame : null,
         detectedMs: Number.isFinite(detectedMs) ? detectedMs : null,
+        missedDetection,
+        detectionMissPenaltyFrames,
+        detectionMissPenaltyMs,
         errorMs,
         absErrorMs,
         errorFrames,
@@ -144,6 +192,7 @@ export async function buildProDetectionsDiagnostics() {
       }
       items.push({
         id: pro.id,
+        displayName: readableProVideoName(pro),
         title: pro.title,
         playerName: pro.playerName || null,
         evaluationSet,
@@ -226,6 +275,14 @@ export function computeDiagnosticsDelta(current, baseline) {
       toNum(curSummary.evaluatedWithGroundTruth) !== null && toNum(baseSummary.evaluatedWithGroundTruth) !== null
         ? toNum(curSummary.evaluatedWithGroundTruth) - toNum(baseSummary.evaluatedWithGroundTruth)
         : null,
+    missedDetections: metricDelta(
+      curSummary.missedDetections,
+      baseSummary.missedDetections
+    ),
+    missedDetectionsDelta:
+      toNum(curSummary.missedDetections) !== null && toNum(baseSummary.missedDetections) !== null
+        ? toNum(curSummary.missedDetections) - toNum(baseSummary.missedDetections)
+        : null,
     meanAbsErrorFrames: metricDelta(
       curSummary.meanAbsErrorFrames,
       baseSummary.meanAbsErrorFrames
@@ -260,6 +317,14 @@ export function computeDiagnosticsDelta(current, baseline) {
         toNum(c.evaluatedWithGroundTruth) !== null && toNum(b.evaluatedWithGroundTruth) !== null
           ? toNum(c.evaluatedWithGroundTruth) - toNum(b.evaluatedWithGroundTruth)
           : null,
+      missedDetections: metricDelta(
+        c.missedDetections,
+        b.missedDetections
+      ),
+      missedDetectionsDelta:
+        toNum(c.missedDetections) !== null && toNum(b.missedDetections) !== null
+          ? toNum(c.missedDetections) - toNum(b.missedDetections)
+          : null,
       meanAbsErrorFrames: metricDelta(
         c.meanAbsErrorFrames,
         b.meanAbsErrorFrames
@@ -290,6 +355,7 @@ export function computeDiagnosticsDelta(current, baseline) {
     const baseErr = toNum(b.absErrorFrames);
     items.push({
       id,
+      displayName: String(c.displayName || b.displayName || ''),
       title: String(c.title || b.title || ''),
       playerName: (c.playerName || b.playerName || null),
       evaluationSet: String(c.evaluationSet || b.evaluationSet || 'core'),

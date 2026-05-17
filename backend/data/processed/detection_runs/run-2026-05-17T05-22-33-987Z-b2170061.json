@@ -1,11 +1,44 @@
 {
+  "runId": "run-2026-05-17T05-22-33-987Z-b2170061",
+  "createdAt": "2026-05-17T05:22:33.988Z",
+  "runType": "auto",
+  "autoReason": "manual_refresh",
+  "tagType": "auto",
+  "branchName": null,
+  "parentRunId": null,
+  "logicVersion": null,
+  "notes": null,
+  "logicFingerprint": "00f17b3f463530e4",
+  "diagnosticsFingerprint": "b12c1a41fb6a9cd7",
+  "proVideosSignatureHash": "41877319a3a9f917",
   "generationVersion": "gen-2026-02-19-12",
-  "proVideosSignature": "[{\"id\":\"alex-1\",\"title\":\"Alexander Zverev Serve Example\",\"startTime\":175,\"endTime\":180,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Alexander Zverev\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"},{\"id\":\"andrey-1\",\"title\":\"Andrey Rublev Serve Example\",\"startTime\":273,\"endTime\":278,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Andrey Rublev\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"},{\"id\":\"ben-1\",\"title\":\"Ben Shelton Serve Example\",\"startTime\":309,\"endTime\":315,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Ben Shelton\",\"strokeType\":\"serve\",\"handedness\":\"left\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"},{\"id\":\"carlos-1\",\"title\":\"Carlos Alcaraz Serve Example\",\"startTime\":112,\"endTime\":118,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":1.27,\"endTime\":3.927,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Novak Djokovic\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_elevated\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T06:41:55.624Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-10\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":201.559,\"endTime\":204.571,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Holger Rune\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"side_frontside\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T07:03:41.017Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-11\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":220.369,\"endTime\":222.967,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Daniil Medvedev\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T07:12:23.150Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-12\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":251.462,\"endTime\":253.778,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Jannik Sinner\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T09:59:59.056Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-13\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":270.487,\"endTime\":273.041,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Jannik Sinner\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:01:11.669Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-14\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":290.586,\"endTime\":293.698,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Stefanos Tsitsipas\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:02:03.059Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-15\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":360.263,\"endTime\":363.611,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Grigor Dimitrov\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"side_backside\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:03:44.215Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-16\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":376.331,\"endTime\":379.352,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Dominic Thiem\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:04:22.294Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-17\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":392.551,\"endTime\":395.052,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Dominic Thiem\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:05:13.374Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-18\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":425.798,\"endTime\":428.165,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Taylor Fritz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:06:32.525Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-19\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":476.812,\"endTime\":478.794,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Felix Auger Aliassime\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:09:22.993Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-2\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":32.466,\"endTime\":34.444,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Nick Kyrgios\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T06:42:56.821Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-20\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":510.676,\"endTime\":514.064,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Matteo Berrettini\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:10:29.627Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-21\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":546.501,\"endTime\":550.15,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Casper Ruud\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:12:04.645Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-22\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":595.784,\"endTime\":598.187,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Novak Djokovic\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"edge\",\"cameraAngle\":\"behind_elevated\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:14:01.790Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-23\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":606.697,\"endTime\":609.512,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Novak Djokovic\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"edge\",\"cameraAngle\":\"behind_elevated\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:14:24.820Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-24\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":610.486,\"endTime\":613.083,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Novak Djokovic\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_elevated\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:14:54.272Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-25\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":617.032,\"endTime\":619.201,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Karue Sell\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_side_backside\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:15:54.163Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-26\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":635.5,\"endTime\":638.339,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Alex de Minaur\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:16:48.439Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-27\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":678.217,\"endTime\":682.472,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Soonwoo Kwon\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:17:46.007Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-28\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":695.955,\"endTime\":698.615,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Dan Evans\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:18:26.935Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-29\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":708.946,\"endTime\":711.76,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Gael Monfils\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:19:42.460Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-3\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":35.975,\"endTime\":37.529,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Nick Kyrgios\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T06:43:48.077Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-30\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":722.328,\"endTime\":724.377,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:20:25.911Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-31\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":730.06,\"endTime\":734.326,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:20:59.552Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-32\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":737.709,\"endTime\":741.953,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:21:28.788Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-33\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":747.062,\"endTime\":751.303,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:21:49.977Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-34\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":834.141,\"endTime\":837.424,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Michael Mmoh\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T10:23:25.354Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-35\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":851.399,\"endTime\":854.297,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Adrian Mannarino\",\"strokeType\":\"serve\",\"handedness\":\"left\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T10:24:22.742Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-4\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":75.439,\"endTime\":78.935,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T06:45:32.019Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-5\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":96.816,\"endTime\":99.929,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T06:46:36.416Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-6\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":114.133,\"endTime\":116.975,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Holger Rune\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-22T06:47:38.443Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-7\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":143.707,\"endTime\":145.913,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Andrey Rublev\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T06:48:38.330Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-8\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":160.734,\"endTime\":163.53,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Alexander Zverev\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T06:49:20.931Z\"},{\"id\":\"court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-9\",\"title\":\"Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)\",\"startTime\":187.119,\"endTime\":190.136,\"youtubeUrl\":\"https://www.youtube.com/watch?v=8sdNcrvv1gw\",\"playerName\":\"Rafael Nadal\",\"strokeType\":\"serve\",\"handedness\":\"left\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_elevated\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-22T06:50:33.317Z\"},{\"id\":\"court-level-view-best-points-tennis-on-another-level-part-6-alcaraz-sinner-nadal-federer-djoko\",\"title\":\"Court Level View Best Points ● Tennis On Another Level Part 6 - Alcaraz Sinner Nadal Federer Djoko\",\"startTime\":0,\"endTime\":2.208,\"youtubeUrl\":\"https://www.youtube.com/watch?v=qXtJDJ1U7_8\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-21T21:30:10.714Z\"},{\"id\":\"court-level-view-best-points-tennis-on-another-level-part-6-alcaraz-sinner-nadal-federer-djoko-2\",\"title\":\"Court Level View Best Points ● Tennis On Another Level Part 6 - Alcaraz Sinner Nadal Federer Djoko\",\"startTime\":322.143,\"endTime\":323.918,\"youtubeUrl\":\"https://www.youtube.com/watch?v=qXtJDJ1U7_8\",\"playerName\":\"Carlos Alcaraz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-21T21:30:10.714Z\"},{\"id\":\"jannik-1\",\"title\":\"Jannik Sinner Serve Example\",\"startTime\":23,\"endTime\":27,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Jannik Sinner\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"},{\"id\":\"novak-1\",\"title\":\"Novak Djokovic Serve Example\",\"startTime\":140,\"endTime\":144,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Novak Djokovic\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"core\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"deuce\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"},{\"id\":\"taylor-1\",\"title\":\"Taylor Fritz Serve Example\",\"startTime\":331,\"endTime\":335,\"youtubeUrl\":\"https://www.youtube.com/watch?v=fhn2ANDE4kA\",\"playerName\":\"Taylor Fritz\",\"strokeType\":\"serve\",\"handedness\":\"right\",\"evaluationSet\":\"edge\",\"cameraAngle\":\"behind_server\",\"courtSide\":\"ad\",\"dateAdded\":\"2026-02-21T00:00:00.000Z\"}]",
-  "generatedAt": "2026-05-17T19:31:37.450Z",
+  "baselineRunId": "run-2026-02-22T19-56-56-863Z-a94a45a5",
+  "summary": {
+    "evaluatedWithGroundTruth": 40,
+    "meanAbsErrorFrames": 2.1,
+    "maxAbsErrorFrames": 27,
+    "meanAbsErrorMs": 35.4,
+    "maxAbsErrorMs": 451
+  },
+  "summaryBySet": {
+    "core": {
+      "evaluatedWithGroundTruth": 39,
+      "meanAbsErrorFrames": 1.4615384615384615,
+      "maxAbsErrorFrames": 14,
+      "meanAbsErrorMs": 24.743589743589745,
+      "maxAbsErrorMs": 233
+    },
+    "edge": {
+      "evaluatedWithGroundTruth": 1,
+      "meanAbsErrorFrames": 27,
+      "maxAbsErrorFrames": 27,
+      "meanAbsErrorMs": 451,
+      "maxAbsErrorMs": 451
+    }
+  },
   "items": [
     {
       "id": "novak-1",
-      "displayName": "Novak Djokovic Serve Example #1",
       "title": "Novak Djokovic Serve Example",
       "playerName": "Novak Djokovic",
       "evaluationSet": "core",
@@ -25,29 +58,50 @@
         },
         "event": {
           "found": true,
-          "frame": 168,
-          "timestampMs": 2800,
-          "confidence": 0.9709531297760512,
+          "frame": 166,
+          "timestampMs": 2767,
+          "confidence": 0.7481973342021174,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 205.83179712295532,
-            "centerIdx": 176,
-            "selectedFrameScore": 0.9170089422172895,
-            "extensionScore": 0.977399113848368,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.9805350391458623,
+            "minDistance": 414.98189175649037,
+            "velocityChange": 5.830951894845301,
+            "p10Distance": 448.41144395673604,
+            "p50Distance": 479.2322307261946,
+            "expectedContactIdx": 126,
+            "selectedFrameScore": 0.798557867361694,
+            "racketHeightScore": 1,
             "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 132,
-              "windowEnd": 228,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 193,
-              "lastMotionIdx": 185,
-              "motionThreshold": 3.0874769568443297
+            "armRejectedCandidates": 34,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 0,
+            "audioScore": 0,
+            "audioTemporalGate": 0,
+            "audioEffectiveWeight": 0,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 107,
+              "windowEnd": 166,
+              "apexIdx": 112,
+              "tossStartIdx": 0,
+              "diagnostics": {
+                "tossMagnitude": 34.79999999999998,
+                "minTossPixels": 28.8,
+                "apexY": 185.4,
+                "baselineY": 220.2
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": true,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -297,19 +351,15 @@
       "commentCount": 1,
       "groundTruthContactFrame": 168,
       "groundTruthContactMs": 2800,
-      "detectedFrame": 168,
-      "detectedMs": 2800,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 0,
-      "absErrorMs": 0,
-      "errorFrames": 0,
-      "absErrorFrames": 0
+      "detectedFrame": 166,
+      "detectedMs": 2767,
+      "errorMs": -33,
+      "absErrorMs": 33,
+      "errorFrames": -2,
+      "absErrorFrames": 2
     },
     {
       "id": "taylor-1",
-      "displayName": "Taylor Fritz Serve Example #1",
       "title": "Taylor Fritz Serve Example",
       "playerName": "Taylor Fritz",
       "evaluationSet": "edge",
@@ -328,43 +378,14 @@
           "duration": 4
         },
         "event": {
-          "found": true,
-          "frame": 202,
-          "timestampMs": 3367,
-          "confidence": 0.9682972306046412,
+          "found": false,
+          "confidence": 0,
+          "reason": "no_plausible_frames_in_search_window",
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 375.76539158821106,
-            "centerIdx": 198,
-            "selectedFrameScore": 0.959595251761954,
-            "extensionScore": 1,
-            "recoveryScore": 0.8693548002040127,
-            "apexHeightScore": 0.9688366218093585,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 132,
-              "windowEnd": 228,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 224,
-              "lastMotionIdx": 216,
-              "motionThreshold": 5.6364808738231655
-            },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
-            "audioAssistEnabled": true,
-            "audioAssistWeight": 0.05,
-            "audioPeakWindowCount": 1,
-            "audioScore": 0.6037689806903713,
-            "audioPeakTimeMs": 3400,
-            "audioDeltaMs": 33,
-            "audioAdjustedFromFrame": 201,
-            "audioAdjustedFromMs": 3350,
-            "audioAdjustedByFrames": 1,
-            "audioAdjustedByMs": 17,
+            "armRejectedCandidates": 42,
             "minContactConfidence": 0.55
           },
-          "noDetectionTag": null
+          "noDetectionTag": "no_contact"
         },
         "tracksAvailable": true,
         "trackingSource": "cache",
@@ -598,19 +619,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 202,
       "groundTruthContactMs": 3367,
-      "detectedFrame": 202,
-      "detectedMs": 3367,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 0,
-      "absErrorMs": 0,
-      "errorFrames": 0,
-      "absErrorFrames": 0
+      "detectedFrame": null,
+      "detectedMs": null,
+      "errorMs": null,
+      "absErrorMs": null,
+      "errorFrames": null,
+      "absErrorFrames": null
     },
     {
       "id": "jannik-1",
-      "displayName": "Jannik Sinner Serve Example #1",
       "title": "Jannik Sinner Serve Example",
       "playerName": "Jannik Sinner",
       "evaluationSet": "core",
@@ -651,8 +668,7 @@
               "lastMotionIdx": 206,
               "motionThreshold": 3.8471063911914825
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -899,9 +915,6 @@
       "groundTruthContactMs": 2583,
       "detectedFrame": 154,
       "detectedMs": 2567,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -16,
       "absErrorMs": 16,
       "errorFrames": -1,
@@ -909,7 +922,6 @@
     },
     {
       "id": "carlos-1",
-      "displayName": "Carlos Alcaraz Serve Example #1",
       "title": "Carlos Alcaraz Serve Example",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -950,8 +962,7 @@
               "lastMotionIdx": 328,
               "motionThreshold": 4.188351935148239
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -1202,9 +1213,6 @@
       "groundTruthContactMs": 4633,
       "detectedFrame": 278,
       "detectedMs": 4633,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -1212,7 +1220,6 @@
     },
     {
       "id": "alex-1",
-      "displayName": "Alexander Zverev Serve Example #1",
       "title": "Alexander Zverev Serve Example",
       "playerName": "Alexander Zverev",
       "evaluationSet": "core",
@@ -1232,39 +1239,50 @@
         },
         "event": {
           "found": true,
-          "frame": 218,
-          "timestampMs": 3633,
-          "confidence": 0.9335852974970069,
+          "frame": 212,
+          "timestampMs": 3533,
+          "confidence": 0.909228945291498,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 384.1258339881897,
-            "centerIdx": 238,
-            "selectedFrameScore": 0.8446763332866477,
-            "extensionScore": 0.9895256966471927,
-            "recoveryScore": 0.8052062466661913,
-            "apexHeightScore": 0.9754461640931902,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 165,
-              "windowEnd": 285,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 266,
-              "lastMotionIdx": 258,
-              "motionThreshold": 5.761887509822845
-            },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "minDistance": 23.985377062347858,
+            "velocityChange": 23.08679276123039,
+            "p10Distance": 23.985377062347858,
+            "p50Distance": 66.76612005187485,
+            "expectedContactIdx": 226,
+            "selectedFrameScore": 0.9273831562331984,
+            "racketHeightScore": 0.7036092051069398,
+            "serveArmScore": 0.9215642544020697,
+            "armRejectedCandidates": 24,
             "audioAssistEnabled": true,
             "audioAssistWeight": 0.05,
             "audioPeakWindowCount": 1,
-            "audioScore": 0.513246268742215,
-            "audioPeakTimeMs": 3670,
-            "audioDeltaMs": 37,
-            "audioAdjustedFromFrame": 217,
-            "audioAdjustedFromMs": 3617,
-            "audioAdjustedByFrames": 1,
-            "audioAdjustedByMs": 17,
+            "audioScore": 0,
+            "audioTemporalGate": 0,
+            "audioEffectiveWeight": 0,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
+            },
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 207,
+              "windowEnd": 266,
+              "apexIdx": 212,
+              "tossStartIdx": 157,
+              "diagnostics": {
+                "tossMagnitude": 152.2,
+                "minTossPixels": 28.8,
+                "apexY": 285.8,
+                "baselineY": 438
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": false,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -1493,19 +1511,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 217,
       "groundTruthContactMs": 3617,
-      "detectedFrame": 218,
-      "detectedMs": 3633,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 16,
-      "absErrorMs": 16,
-      "errorFrames": 1,
-      "absErrorFrames": 1
+      "detectedFrame": 212,
+      "detectedMs": 3533,
+      "errorMs": -84,
+      "absErrorMs": 84,
+      "errorFrames": -5,
+      "absErrorFrames": 5
     },
     {
       "id": "andrey-1",
-      "displayName": "Andrey Rublev Serve Example #1",
       "title": "Andrey Rublev Serve Example",
       "playerName": "Andrey Rublev",
       "evaluationSet": "core",
@@ -1546,8 +1560,7 @@
               "lastMotionIdx": 233,
               "motionThreshold": 4.339789617061615
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -1782,9 +1795,6 @@
       "groundTruthContactMs": 3300,
       "detectedFrame": 198,
       "detectedMs": 3300,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -1792,7 +1802,6 @@
     },
     {
       "id": "ben-1",
-      "displayName": "Ben Shelton Serve Example #1",
       "title": "Ben Shelton Serve Example",
       "playerName": "Ben Shelton",
       "evaluationSet": "core",
@@ -1833,8 +1842,7 @@
               "lastMotionIdx": 280,
               "motionThreshold": 4.973965054750442
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -2077,9 +2085,6 @@
       "groundTruthContactMs": 4100,
       "detectedFrame": 246,
       "detectedMs": 4100,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -2087,7 +2092,6 @@
     },
     {
       "id": "court-level-view-best-points-tennis-on-another-level-part-6-alcaraz-sinner-nadal-federer-djoko",
-      "displayName": "Carlos Alcaraz Serve Example",
       "title": "Court Level View Best Points ● Tennis On Another Level Part 6 - Alcaraz Sinner Nadal Federer Djoko",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -2128,8 +2132,7 @@
               "lastMotionIdx": 57,
               "motionThreshold": 2.462424302101135
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -2364,9 +2367,6 @@
       "groundTruthContactMs": 1435,
       "detectedFrame": 44,
       "detectedMs": 1468,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 33,
       "absErrorMs": 33,
       "errorFrames": 1,
@@ -2374,7 +2374,6 @@
     },
     {
       "id": "court-level-view-best-points-tennis-on-another-level-part-6-alcaraz-sinner-nadal-federer-djoko-2",
-      "displayName": "Carlos Alcaraz Serve Example #2",
       "title": "Court Level View Best Points ● Tennis On Another Level Part 6 - Alcaraz Sinner Nadal Federer Djoko",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -2412,8 +2411,7 @@
               "lastMotionIdx": 50,
               "motionThreshold": 2.7187267541885376
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -2648,9 +2646,6 @@
       "groundTruthContactMs": 1101,
       "detectedFrame": 33,
       "detectedMs": 1101,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -2658,7 +2653,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps",
-      "displayName": "Novak Djokovic Serve Example",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Novak Djokovic",
       "evaluationSet": "core",
@@ -2699,8 +2693,7 @@
               "lastMotionIdx": 142,
               "motionThreshold": 2.5987422108650207
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -2935,9 +2928,6 @@
       "groundTruthContactMs": 2069,
       "detectedFrame": 124,
       "detectedMs": 2069,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -2945,7 +2935,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-2",
-      "displayName": "Nick Kyrgios Serve Example #2",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Nick Kyrgios",
       "evaluationSet": "core",
@@ -2965,29 +2954,50 @@
         },
         "event": {
           "found": true,
-          "frame": 82,
-          "timestampMs": 1368,
-          "confidence": 0.9082105256391036,
+          "frame": 81,
+          "timestampMs": 1351,
+          "confidence": 0.7231642280988086,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 242.7709813117981,
-            "centerIdx": 97,
-            "selectedFrameScore": 0.7377443589688678,
-            "extensionScore": 0.7398697060351558,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.7690171055707092,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 64,
-              "windowEnd": 112,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 110,
-              "lastMotionIdx": 102,
-              "motionThreshold": 3.641564719676971
+            "minDistance": 597.5258258578865,
+            "velocityChange": 16.76305461424021,
+            "p10Distance": 597.5258258578865,
+            "p50Distance": 644.907608561033,
+            "expectedContactIdx": 99,
+            "selectedFrameScore": 0.778531382479047,
+            "racketHeightScore": 0.4563679157012351,
+            "serveArmScore": 0.13436071024099316,
+            "armRejectedCandidates": 14,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 1,
+            "audioScore": 0,
+            "audioTemporalGate": 0,
+            "audioEffectiveWeight": 0,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 80,
+              "windowEnd": 117,
+              "apexIdx": 85,
+              "tossStartIdx": 27,
+              "diagnostics": {
+                "tossMagnitude": 62,
+                "minTossPixels": 28.8,
+                "apexY": 334,
+                "baselineY": 396
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": false,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -3224,19 +3234,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 83,
       "groundTruthContactMs": 1385,
-      "detectedFrame": 82,
-      "detectedMs": 1368,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": -17,
-      "absErrorMs": 17,
-      "errorFrames": -1,
-      "absErrorFrames": 1
+      "detectedFrame": 81,
+      "detectedMs": 1351,
+      "errorMs": -34,
+      "absErrorMs": 34,
+      "errorFrames": -2,
+      "absErrorFrames": 2
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-3",
-      "displayName": "Nick Kyrgios Serve Example #3",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Nick Kyrgios",
       "evaluationSet": "core",
@@ -3256,26 +3262,50 @@
         },
         "event": {
           "found": true,
-          "frame": 52,
-          "timestampMs": 868,
-          "confidence": 0.9250030048973044,
+          "frame": 68,
+          "timestampMs": 1134,
+          "confidence": 0.7275187361097886,
           "diagnostics": {
-            "mode": "pose_apex_secondary",
-            "yRange": 216.22613489627838,
-            "centerIdx": 70,
-            "selectedFrameScore": 0.7500100163243483,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 51,
-              "windowEnd": 88,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 78,
-              "lastMotionIdx": 70,
-              "motionThreshold": 3.2433920234441755
+            "minDistance": 132.4346432704866,
+            "velocityChange": 5.0990195135927845,
+            "p10Distance": 132.4346432704866,
+            "p50Distance": 144.13588024211373,
+            "expectedContactIdx": 53,
+            "selectedFrameScore": 0.7820149888878309,
+            "racketHeightScore": 0.6705532949039432,
+            "serveArmScore": 0.5,
+            "armRejectedCandidates": 4,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 0,
+            "audioScore": 0,
+            "audioTemporalGate": 0,
+            "audioEffectiveWeight": 0,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 64,
+              "windowEnd": 92,
+              "apexIdx": 39,
+              "tossStartIdx": 1,
+              "diagnostics": {
+                "tossMagnitude": 29.200000000000017,
+                "minTossPixels": 28.8,
+                "apexY": 229.4,
+                "baselineY": 258.6
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": true,
+            "veryLowToss": true,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -3504,19 +3534,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 54,
       "groundTruthContactMs": 901,
-      "detectedFrame": 52,
-      "detectedMs": 868,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": -33,
-      "absErrorMs": 33,
-      "errorFrames": -2,
-      "absErrorFrames": 2
+      "detectedFrame": 68,
+      "detectedMs": 1134,
+      "errorMs": 233,
+      "absErrorMs": 233,
+      "errorFrames": 14,
+      "absErrorFrames": 14
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-4",
-      "displayName": "Carlos Alcaraz Serve Example #4",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -3557,8 +3583,7 @@
               "lastMotionIdx": 193,
               "motionThreshold": 4.272898542881012
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -3809,9 +3834,6 @@
       "groundTruthContactMs": 2769,
       "detectedFrame": 166,
       "detectedMs": 2769,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -3819,7 +3841,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-5",
-      "displayName": "Carlos Alcaraz Serve Example #5",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -3860,8 +3881,7 @@
               "lastMotionIdx": 176,
               "motionThreshold": 4.180101134777069
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -4100,9 +4120,6 @@
       "groundTruthContactMs": 2402,
       "detectedFrame": 143,
       "detectedMs": 2386,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -16,
       "absErrorMs": 16,
       "errorFrames": -1,
@@ -4110,7 +4127,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-6",
-      "displayName": "Holger Rune Serve Example #6",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Holger Rune",
       "evaluationSet": "core",
@@ -4151,8 +4167,7 @@
               "lastMotionIdx": 151,
               "motionThreshold": 4.410208418369293
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -4399,9 +4414,6 @@
       "groundTruthContactMs": 2135,
       "detectedFrame": 128,
       "detectedMs": 2135,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -4409,7 +4421,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-7",
-      "displayName": "Andrey Rublev Serve Example #7",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Andrey Rublev",
       "evaluationSet": "core",
@@ -4450,8 +4461,7 @@
               "lastMotionIdx": 115,
               "motionThreshold": 4.060087895393371
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -4690,9 +4700,6 @@
       "groundTruthContactMs": 1485,
       "detectedFrame": 89,
       "detectedMs": 1485,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -4700,7 +4707,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-8",
-      "displayName": "Alexander Zverev Serve Example #8",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Alexander Zverev",
       "evaluationSet": "core",
@@ -4722,7 +4728,7 @@
           "found": true,
           "frame": 118,
           "timestampMs": 1969,
-          "confidence": 0.9513203103508118,
+          "confidence": 0.9541945945042632,
           "diagnostics": {
             "mode": "pose_extension_primary",
             "yRange": 339.23598432540894,
@@ -4741,18 +4747,7 @@
               "lastMotionIdx": 149,
               "motionThreshold": 5.0885397648811335
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
-            "audioAssistEnabled": true,
-            "audioAssistWeight": 0.05,
-            "audioPeakWindowCount": 3,
-            "audioScore": 0.5701655266928961,
-            "audioPeakTimeMs": 1950,
-            "audioDeltaMs": 19,
-            "audioAdjustedFromFrame": 118,
-            "audioAdjustedFromMs": 1969,
-            "audioAdjustedByFrames": 0,
-            "audioAdjustedByMs": 0,
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -4995,9 +4990,6 @@
       "groundTruthContactMs": 1985,
       "detectedFrame": 118,
       "detectedMs": 1969,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -16,
       "absErrorMs": 16,
       "errorFrames": -1,
@@ -5005,7 +4997,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-9",
-      "displayName": "Rafael Nadal Serve Example #9",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Rafael Nadal",
       "evaluationSet": "core",
@@ -5046,8 +5037,7 @@
               "lastMotionIdx": 140,
               "motionThreshold": 4.52549740076065
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -5286,9 +5276,6 @@
       "groundTruthContactMs": 2085,
       "detectedFrame": 125,
       "detectedMs": 2085,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -5296,7 +5283,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-10",
-      "displayName": "Holger Rune Serve Example #10",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Holger Rune",
       "evaluationSet": "core",
@@ -5337,8 +5323,7 @@
               "lastMotionIdx": 163,
               "motionThreshold": 3.3624929666519163
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -5581,9 +5566,6 @@
       "groundTruthContactMs": 2336,
       "detectedFrame": 140,
       "detectedMs": 2336,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -5591,7 +5573,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-11",
-      "displayName": "Daniil Medvedev Serve Example #11",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Daniil Medvedev",
       "evaluationSet": "core",
@@ -5611,29 +5592,50 @@
         },
         "event": {
           "found": true,
-          "frame": 114,
-          "timestampMs": 1902,
-          "confidence": 0.9551362353457007,
+          "frame": 110,
+          "timestampMs": 1835,
+          "confidence": 0.8221387323447045,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 265.3920292854309,
-            "centerIdx": 130,
-            "selectedFrameScore": 0.8718178152734309,
-            "extensionScore": 1,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.9535598207171395,
+            "minDistance": 46.91651320997069,
+            "velocityChange": 12.041594578792296,
+            "p10Distance": 48.25167953233913,
+            "p50Distance": 86.15902577456548,
+            "expectedContactIdx": 126,
+            "selectedFrameScore": 0.8577109858757637,
+            "racketHeightScore": 0.7516352816967163,
             "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 85,
-              "windowEnd": 147,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 147,
-              "lastMotionIdx": 140,
-              "motionThreshold": 3.9808804392814636
+            "armRejectedCandidates": 22,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 2,
+            "audioScore": 0,
+            "audioTemporalGate": 0,
+            "audioEffectiveWeight": 0,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "ad",
+              "isRightHandServeAdSide": true
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 109,
+              "windowEnd": 150,
+              "apexIdx": 114,
+              "tossStartIdx": 0,
+              "diagnostics": {
+                "tossMagnitude": 101.19999999999999,
+                "minTossPixels": 28.8,
+                "apexY": 311.6,
+                "baselineY": 412.8
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": false,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -5878,19 +5880,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 115,
       "groundTruthContactMs": 1919,
-      "detectedFrame": 114,
-      "detectedMs": 1902,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": -17,
-      "absErrorMs": 17,
-      "errorFrames": -1,
-      "absErrorFrames": 1
+      "detectedFrame": 110,
+      "detectedMs": 1835,
+      "errorMs": -84,
+      "absErrorMs": 84,
+      "errorFrames": -5,
+      "absErrorFrames": 5
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-12",
-      "displayName": "Jannik Sinner Serve Example #12",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Jannik Sinner",
       "evaluationSet": "core",
@@ -5931,8 +5929,7 @@
               "lastMotionIdx": 131,
               "motionThreshold": 4.5530840063095095
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -6175,9 +6172,6 @@
       "groundTruthContactMs": 1585,
       "detectedFrame": 94,
       "detectedMs": 1568,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -6185,7 +6179,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-13",
-      "displayName": "Jannik Sinner Serve Example #13",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Jannik Sinner",
       "evaluationSet": "core",
@@ -6226,8 +6219,7 @@
               "lastMotionIdx": 143,
               "motionThreshold": 3.848280394077301
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -6466,9 +6458,6 @@
       "groundTruthContactMs": 1785,
       "detectedFrame": 106,
       "detectedMs": 1768,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -6476,7 +6465,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-14",
-      "displayName": "Stefanos Tsitsipas Serve Example #14",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Stefanos Tsitsipas",
       "evaluationSet": "core",
@@ -6517,8 +6505,7 @@
               "lastMotionIdx": 176,
               "motionThreshold": 5.02494137763977
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -6761,9 +6748,6 @@
       "groundTruthContactMs": 2436,
       "detectedFrame": 146,
       "detectedMs": 2436,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -6771,7 +6755,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-15",
-      "displayName": "Grigor Dimitrov Serve Example #15",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Grigor Dimitrov",
       "evaluationSet": "core",
@@ -6812,8 +6795,7 @@
               "lastMotionIdx": 140,
               "motionThreshold": 2.325091874599457
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -7052,9 +7034,6 @@
       "groundTruthContactMs": 2219,
       "detectedFrame": 132,
       "detectedMs": 2202,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -7062,7 +7041,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-16",
-      "displayName": "Dominic Thiem Serve Example #16",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Dominic Thiem",
       "evaluationSet": "core",
@@ -7084,7 +7062,7 @@
           "found": true,
           "frame": 132,
           "timestampMs": 2202,
-          "confidence": 0.9540779770055231,
+          "confidence": 0.9574471890909519,
           "diagnostics": {
             "mode": "pose_extension_primary",
             "yRange": 318.9707398414612,
@@ -7103,18 +7081,7 @@
               "lastMotionIdx": 160,
               "motionThreshold": 4.784561097621918
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
-            "audioAssistEnabled": true,
-            "audioAssistWeight": 0.05,
-            "audioPeakWindowCount": 4,
-            "audioScore": 0.575722347598625,
-            "audioPeakTimeMs": 2180,
-            "audioDeltaMs": 22,
-            "audioAdjustedFromFrame": 132,
-            "audioAdjustedFromMs": 2202,
-            "audioAdjustedByFrames": 0,
-            "audioAdjustedByMs": 0,
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -7365,9 +7332,6 @@
       "groundTruthContactMs": 2219,
       "detectedFrame": 132,
       "detectedMs": 2202,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -7375,7 +7339,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-17",
-      "displayName": "Dominic Thiem Serve Example #17",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Dominic Thiem",
       "evaluationSet": "core",
@@ -7416,8 +7379,7 @@
               "lastMotionIdx": 138,
               "motionThreshold": 4.4807868003845215
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -7664,9 +7626,6 @@
       "groundTruthContactMs": 1552,
       "detectedFrame": 94,
       "detectedMs": 1568,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 16,
       "absErrorMs": 16,
       "errorFrames": 1,
@@ -7674,7 +7633,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-18",
-      "displayName": "Taylor Fritz Serve Example #18",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Taylor Fritz",
       "evaluationSet": "core",
@@ -7696,7 +7654,7 @@
           "found": true,
           "frame": 83,
           "timestampMs": 1385,
-          "confidence": 0.9259170200518478,
+          "confidence": 0.9250001007859208,
           "diagnostics": {
             "mode": "pose_apex_secondary",
             "yRange": 303.1143159866333,
@@ -7712,18 +7670,7 @@
               "lastMotionIdx": 114,
               "motionThreshold": 4.5467147397995
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
-            "audioAssistEnabled": true,
-            "audioAssistWeight": 0.05,
-            "audioPeakWindowCount": 3,
-            "audioScore": 0.4970335508253978,
-            "audioPeakTimeMs": 1370,
-            "audioDeltaMs": 15,
-            "audioAdjustedFromFrame": 83,
-            "audioAdjustedFromMs": 1385,
-            "audioAdjustedByFrames": 0,
-            "audioAdjustedByMs": 0,
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -7966,9 +7913,6 @@
       "groundTruthContactMs": 1401,
       "detectedFrame": 83,
       "detectedMs": 1385,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -16,
       "absErrorMs": 16,
       "errorFrames": -1,
@@ -7976,7 +7920,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-19",
-      "displayName": "Felix Auger Aliassime Serve Example #19",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Felix Auger Aliassime",
       "evaluationSet": "core",
@@ -8017,8 +7960,7 @@
               "lastMotionIdx": 101,
               "motionThreshold": 3.5554491519927978
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -8257,9 +8199,6 @@
       "groundTruthContactMs": 1351,
       "detectedFrame": 80,
       "detectedMs": 1335,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -16,
       "absErrorMs": 16,
       "errorFrames": -1,
@@ -8267,7 +8206,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-20",
-      "displayName": "Matteo Berrettini Serve Example #20",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Matteo Berrettini",
       "evaluationSet": "core",
@@ -8308,8 +8246,7 @@
               "lastMotionIdx": 191,
               "motionThreshold": 4.650878820419312
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -8552,9 +8489,6 @@
       "groundTruthContactMs": 2803,
       "detectedFrame": 167,
       "detectedMs": 2786,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -8562,7 +8496,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-21",
-      "displayName": "Casper Ruud Serve Example #21",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Casper Ruud",
       "evaluationSet": "core",
@@ -8603,8 +8536,7 @@
               "lastMotionIdx": 201,
               "motionThreshold": 4.1856146335601805
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -8847,9 +8779,6 @@
       "groundTruthContactMs": 3003,
       "detectedFrame": 179,
       "detectedMs": 2986,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -8857,7 +8786,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-22",
-      "displayName": "Novak Djokovic Serve Example #22",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Novak Djokovic",
       "evaluationSet": "edge",
@@ -8878,11 +8806,12 @@
         "event": {
           "found": false,
           "confidence": 0,
-          "reason": "no_plausible_racket_frames_in_fallback_window",
-          "noDetectionTag": "no_serve",
+          "reason": "no_plausible_frames_in_search_window",
           "diagnostics": {
+            "armRejectedCandidates": 42,
             "minContactConfidence": 0.55
-          }
+          },
+          "noDetectionTag": "no_contact"
         },
         "tracksAvailable": true,
         "trackingSource": "cache",
@@ -9123,17 +9052,13 @@
       "groundTruthContactMs": 1852,
       "detectedFrame": null,
       "detectedMs": null,
-      "missedDetection": true,
-      "detectionMissPenaltyFrames": 144,
-      "detectionMissPenaltyMs": 2402,
       "errorMs": null,
-      "absErrorMs": 2402,
+      "absErrorMs": null,
       "errorFrames": null,
-      "absErrorFrames": 144
+      "absErrorFrames": null
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-23",
-      "displayName": "Novak Djokovic Serve Example #23",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Novak Djokovic",
       "evaluationSet": "edge",
@@ -9152,13 +9077,28 @@
           "duration": 2.8028
         },
         "event": {
-          "found": false,
-          "confidence": 0,
-          "reason": "no_plausible_racket_frames_in_fallback_window",
-          "noDetectionTag": "no_serve",
+          "found": true,
+          "frame": 153,
+          "timestampMs": 2553,
+          "confidence": 0.9283281611901945,
           "diagnostics": {
+            "mode": "ball_late_phase_secondary",
+            "minDistance": 187.1875300460486,
+            "velocityChange": 33.94112549695428,
+            "p10Distance": 189.90243788194311,
+            "p50Distance": 198.99245190097236,
+            "selectedFrameScore": 0.9299214040812385,
+            "expectedContactIdx": 139,
+            "window": {
+              "ok": true,
+              "windowStart": 92,
+              "windowEnd": 159,
+              "mode": "late_serve_phase"
+            },
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
-          }
+          },
+          "noDetectionTag": null
         },
         "tracksAvailable": true,
         "trackingSource": "cache",
@@ -9393,19 +9333,15 @@
       "commentCount": 2,
       "groundTruthContactFrame": 126,
       "groundTruthContactMs": 2102,
-      "detectedFrame": null,
-      "detectedMs": null,
-      "missedDetection": true,
-      "detectionMissPenaltyFrames": 168,
-      "detectionMissPenaltyMs": 2803,
-      "errorMs": null,
-      "absErrorMs": 2803,
-      "errorFrames": null,
-      "absErrorFrames": 168
+      "detectedFrame": 153,
+      "detectedMs": 2553,
+      "errorMs": 451,
+      "absErrorMs": 451,
+      "errorFrames": 27,
+      "absErrorFrames": 27
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-24",
-      "displayName": "Novak Djokovic Serve Example #24",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Novak Djokovic",
       "evaluationSet": "core",
@@ -9446,8 +9382,7 @@
               "lastMotionIdx": 134,
               "motionThreshold": 2.8176495730876923
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -9678,9 +9613,6 @@
       "groundTruthContactMs": 1969,
       "detectedFrame": 117,
       "detectedMs": 1952,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -9688,7 +9620,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-25",
-      "displayName": "Karue Sell Serve Example #25",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Karue Sell",
       "evaluationSet": "core",
@@ -9729,8 +9660,7 @@
               "lastMotionIdx": 111,
               "motionThreshold": 3.321332709789276
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -9969,9 +9899,6 @@
       "groundTruthContactMs": 1518,
       "detectedFrame": 89,
       "detectedMs": 1485,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -33,
       "absErrorMs": 33,
       "errorFrames": -2,
@@ -9979,7 +9906,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-26",
-      "displayName": "Alex de Minaur Serve Example #26",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Alex de Minaur",
       "evaluationSet": "core",
@@ -10020,8 +9946,7 @@
               "lastMotionIdx": 157,
               "motionThreshold": 4.021335886716843
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -10260,9 +10185,6 @@
       "groundTruthContactMs": 1869,
       "detectedFrame": 111,
       "detectedMs": 1852,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -10270,7 +10192,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-27",
-      "displayName": "Soonwoo Kwon Serve Example #27",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Soonwoo Kwon",
       "evaluationSet": "core",
@@ -10290,29 +10211,50 @@
         },
         "event": {
           "found": true,
-          "frame": 205,
-          "timestampMs": 3420,
-          "confidence": 0.9862396244023184,
+          "frame": 203,
+          "timestampMs": 3387,
+          "confidence": 0.8842663303133415,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 262.84108686447144,
-            "centerIdx": 213,
-            "selectedFrameScore": 0.9606846411494816,
-            "extensionScore": 1,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.974187026802555,
+            "minDistance": 16.882808001749748,
+            "velocityChange": 9.899494936611665,
+            "p10Distance": 22.198430910503536,
+            "p50Distance": 70.75512599740257,
+            "expectedContactIdx": 202,
+            "selectedFrameScore": 0.89750374644717,
+            "racketHeightScore": 0.9265641067182618,
             "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 140,
-              "windowEnd": 242,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 242,
-              "lastMotionIdx": 239,
-              "motionThreshold": 3.9426163029670716
+            "armRejectedCandidates": 17,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 1,
+            "audioScore": 0,
+            "audioTemporalGate": 0.9909317803503312,
+            "audioEffectiveWeight": 0.04954658901751657,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 183,
+              "windowEnd": 242,
+              "apexIdx": 188,
+              "tossStartIdx": 8,
+              "diagnostics": {
+                "tossMagnitude": 62.80000000000001,
+                "minTossPixels": 28.8,
+                "apexY": 295.4,
+                "baselineY": 358.2
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": false,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -10565,19 +10507,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 205,
       "groundTruthContactMs": 3420,
-      "detectedFrame": 205,
-      "detectedMs": 3420,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 0,
-      "absErrorMs": 0,
-      "errorFrames": 0,
-      "absErrorFrames": 0
+      "detectedFrame": 203,
+      "detectedMs": 3387,
+      "errorMs": -33,
+      "absErrorMs": 33,
+      "errorFrames": -2,
+      "absErrorFrames": 2
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-28",
-      "displayName": "Dan Evans Serve Example #28",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Dan Evans",
       "evaluationSet": "core",
@@ -10597,29 +10535,50 @@
         },
         "event": {
           "found": true,
-          "frame": 109,
-          "timestampMs": 1818,
-          "confidence": 0.9578393999636616,
+          "frame": 113,
+          "timestampMs": 1885,
+          "confidence": 0.7297444963338219,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 227.3992681503296,
-            "centerIdx": 121,
-            "selectedFrameScore": 0.8795411427533191,
-            "extensionScore": 1,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.9712198848528918,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 87,
-              "windowEnd": 151,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 134,
-              "lastMotionIdx": 126,
-              "motionThreshold": 3.410989022254944
+            "minDistance": 39.968844351636186,
+            "velocityChange": 13,
+            "p10Distance": 39.968844351636186,
+            "p50Distance": 88.32277174563518,
+            "expectedContactIdx": 130,
+            "selectedFrameScore": 0.7837955970670576,
+            "racketHeightScore": 0,
+            "serveArmScore": 0.07516861642026762,
+            "armRejectedCandidates": 45,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 0,
+            "audioScore": 0,
+            "audioTemporalGate": 0,
+            "audioEffectiveWeight": 0,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 111,
+              "windowEnd": 158,
+              "apexIdx": 116,
+              "tossStartIdx": 0,
+              "diagnostics": {
+                "tossMagnitude": 130.8,
+                "minTossPixels": 28.8,
+                "apexY": 313.2,
+                "baselineY": 444
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": false,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -10860,19 +10819,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 108,
       "groundTruthContactMs": 1802,
-      "detectedFrame": 109,
-      "detectedMs": 1818,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 16,
-      "absErrorMs": 16,
-      "errorFrames": 1,
-      "absErrorFrames": 1
+      "detectedFrame": 113,
+      "detectedMs": 1885,
+      "errorMs": 83,
+      "absErrorMs": 83,
+      "errorFrames": 5,
+      "absErrorFrames": 5
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-29",
-      "displayName": "Gael Monfils Serve Example #29",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Gael Monfils",
       "evaluationSet": "core",
@@ -10892,29 +10847,50 @@
         },
         "event": {
           "found": true,
-          "frame": 107,
-          "timestampMs": 1785,
-          "confidence": 0.9348262423222491,
+          "frame": 111,
+          "timestampMs": 1852,
+          "confidence": 0.8338116217151447,
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 331.247597694397,
-            "centerIdx": 140,
-            "selectedFrameScore": 0.8137892637778547,
-            "extensionScore": 0.8547015944131667,
-            "recoveryScore": 0.9415162480833982,
-            "apexHeightScore": 0.9737307863857367,
+            "minDistance": 522.2618580230251,
+            "velocityChange": 12.083045973594572,
+            "p10Distance": 526.010226340914,
+            "p50Distance": 658.1580497386597,
+            "expectedContactIdx": 103,
+            "selectedFrameScore": 0.8620284057889578,
+            "racketHeightScore": 0.7516206571533234,
             "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 92,
-              "windowEnd": 159,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 159,
-              "lastMotionIdx": 159,
-              "motionThreshold": 4.9687139654159544
+            "armRejectedCandidates": 26,
+            "audioAssistEnabled": true,
+            "audioAssistWeight": 0.05,
+            "audioPeakWindowCount": 1,
+            "audioScore": 0,
+            "audioTemporalGate": 0.5020891583158017,
+            "audioEffectiveWeight": 0.025104457915790086,
+            "audioPeakTimeMs": null,
+            "audioDeltaMs": null,
+            "profile": {
+              "strokeType": "serve",
+              "handedness": "right",
+              "courtSide": "deuce",
+              "isRightHandServeAdSide": false
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "searchWindow": {
+              "ok": true,
+              "windowStart": 84,
+              "windowEnd": 143,
+              "apexIdx": 89,
+              "tossStartIdx": 0,
+              "diagnostics": {
+                "tossMagnitude": 65.4,
+                "minTossPixels": 28.8,
+                "apexY": 119.6,
+                "baselineY": 185
+              },
+              "mode": "toss_window"
+            },
+            "lowToss": false,
+            "veryLowToss": false,
+            "fallbackFrom": null,
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -11147,19 +11123,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 108,
       "groundTruthContactMs": 1802,
-      "detectedFrame": 107,
-      "detectedMs": 1785,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": -17,
-      "absErrorMs": 17,
-      "errorFrames": -1,
-      "absErrorFrames": 1
+      "detectedFrame": 111,
+      "detectedMs": 1852,
+      "errorMs": 50,
+      "absErrorMs": 50,
+      "errorFrames": 3,
+      "absErrorFrames": 3
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-30",
-      "displayName": "Carlos Alcaraz Serve Example #30",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -11200,8 +11172,7 @@
               "lastMotionIdx": 111,
               "motionThreshold": 4.171567797660828
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -11440,9 +11411,6 @@
       "groundTruthContactMs": 1301,
       "detectedFrame": 78,
       "detectedMs": 1301,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -11450,7 +11418,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-31",
-      "displayName": "Carlos Alcaraz Serve Example #31",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -11491,8 +11458,7 @@
               "lastMotionIdx": 229,
               "motionThreshold": 4.27362574338913
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -11735,9 +11701,6 @@
       "groundTruthContactMs": 3520,
       "detectedFrame": 211,
       "detectedMs": 3520,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": 0,
       "absErrorMs": 0,
       "errorFrames": 0,
@@ -11745,7 +11708,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-32",
-      "displayName": "Carlos Alcaraz Serve Example #32",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -11764,33 +11726,14 @@
           "duration": 4.237567
         },
         "event": {
-          "found": true,
-          "frame": 209,
-          "timestampMs": 3487,
-          "confidence": 0.9946312238887771,
+          "found": false,
+          "confidence": 0,
+          "reason": "no_plausible_frames_in_search_window",
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 283.4020757675171,
-            "centerIdx": 212,
-            "selectedFrameScore": 0.9846606396822208,
-            "extensionScore": 1,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.9597637674489953,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 139,
-              "windowEnd": 241,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 241,
-              "lastMotionIdx": 236,
-              "motionThreshold": 4.251031136512756
-            },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "armRejectedCandidates": 42,
             "minContactConfidence": 0.55
           },
-          "noDetectionTag": null
+          "noDetectionTag": "no_contact"
         },
         "tracksAvailable": true,
         "trackingSource": "cache",
@@ -12044,19 +11987,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 209,
       "groundTruthContactMs": 3487,
-      "detectedFrame": 209,
-      "detectedMs": 3487,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 0,
-      "absErrorMs": 0,
-      "errorFrames": 0,
-      "absErrorFrames": 0
+      "detectedFrame": null,
+      "detectedMs": null,
+      "errorMs": null,
+      "absErrorMs": null,
+      "errorFrames": null,
+      "absErrorFrames": null
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-33",
-      "displayName": "Carlos Alcaraz Serve Example #33",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Carlos Alcaraz",
       "evaluationSet": "core",
@@ -12075,33 +12014,14 @@
           "duration": 4.237567
         },
         "event": {
-          "found": true,
-          "frame": 212,
-          "timestampMs": 3537,
-          "confidence": 0.9958286490082138,
+          "found": false,
+          "confidence": 0,
+          "reason": "no_plausible_frames_in_search_window",
           "diagnostics": {
-            "mode": "pose_extension_primary",
-            "yRange": 285.0288677215576,
-            "centerIdx": 212,
-            "selectedFrameScore": 0.9880818543091826,
-            "extensionScore": 1,
-            "recoveryScore": 1,
-            "apexHeightScore": 0.9523274172367305,
-            "serveArmScore": 1,
-            "window": {
-              "ok": true,
-              "windowStart": 139,
-              "windowEnd": 241,
-              "mode": "late_serve_phase",
-              "effectiveWindowEnd": 241,
-              "lastMotionIdx": 238,
-              "motionThreshold": 4.275433015823364
-            },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "armRejectedCandidates": 42,
             "minContactConfidence": 0.55
           },
-          "noDetectionTag": null
+          "noDetectionTag": "no_contact"
         },
         "tracksAvailable": true,
         "trackingSource": "cache",
@@ -12351,19 +12271,15 @@
       "commentCount": 0,
       "groundTruthContactFrame": 212,
       "groundTruthContactMs": 3537,
-      "detectedFrame": 212,
-      "detectedMs": 3537,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
-      "errorMs": 0,
-      "absErrorMs": 0,
-      "errorFrames": 0,
-      "absErrorFrames": 0
+      "detectedFrame": null,
+      "detectedMs": null,
+      "errorMs": null,
+      "absErrorMs": null,
+      "errorFrames": null,
+      "absErrorFrames": null
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-34",
-      "displayName": "Michael Mmoh Serve Example #34",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Michael Mmoh",
       "evaluationSet": "core",
@@ -12404,8 +12320,7 @@
               "lastMotionIdx": 159,
               "motionThreshold": 4.627547299861908
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -12664,9 +12579,6 @@
       "groundTruthContactMs": 2336,
       "detectedFrame": 139,
       "detectedMs": 2319,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -17,
       "absErrorMs": 17,
       "errorFrames": -1,
@@ -12674,7 +12586,6 @@
     },
     {
       "id": "court-level-atp-serve-compilation-2023-slow-motion-4k-60fps-35",
-      "displayName": "Adrian Mannarino Serve Example #35",
       "title": "Court Level ATP Serve Compilation 2023 | Slow Motion (4K 60FPS)",
       "playerName": "Adrian Mannarino",
       "evaluationSet": "core",
@@ -12715,8 +12626,7 @@
               "lastMotionIdx": 145,
               "motionThreshold": 3.250167524814606
             },
-            "path": "pose_primary",
-            "switchedFrom": "ball_disabled_pose_primary",
+            "fallbackFrom": "toss_not_detected",
             "minContactConfidence": 0.55
           },
           "noDetectionTag": null
@@ -12959,39 +12869,10 @@
       "groundTruthContactMs": 2202,
       "detectedFrame": 131,
       "detectedMs": 2186,
-      "missedDetection": false,
-      "detectionMissPenaltyFrames": null,
-      "detectionMissPenaltyMs": null,
       "errorMs": -16,
       "absErrorMs": 16,
       "errorFrames": -1,
       "absErrorFrames": 1
     }
-  ],
-  "summary": {
-    "evaluatedWithGroundTruth": 44,
-    "missedDetections": 2,
-    "meanAbsErrorFrames": 7.681818181818182,
-    "maxAbsErrorFrames": 168,
-    "meanAbsErrorMs": 128.45454545454547,
-    "maxAbsErrorMs": 2803
-  },
-  "summaryBySet": {
-    "core": {
-      "evaluatedWithGroundTruth": 41,
-      "missedDetections": 0,
-      "meanAbsErrorFrames": 0.6341463414634146,
-      "maxAbsErrorFrames": 2,
-      "meanAbsErrorMs": 10.902439024390244,
-      "maxAbsErrorMs": 33
-    },
-    "edge": {
-      "evaluatedWithGroundTruth": 3,
-      "missedDetections": 2,
-      "meanAbsErrorFrames": 104,
-      "maxAbsErrorFrames": 168,
-      "meanAbsErrorMs": 1735,
-      "maxAbsErrorMs": 2803
-    }
-  }
+  ]
 }

@@ -74,14 +74,17 @@ export const config = {
     audioAssistEnabled: parsed?.detection?.audioAssistEnabled ?? true,
     audioAssistWeight: parsed?.detection?.audioAssistWeight ?? 0.05,
     audioAssistWindowMs: parsed?.detection?.audioAssistWindowMs ?? 45,
-    audioSampleRate: parsed?.detection?.audioSampleRate ?? 16000
+    audioSampleRate: parsed?.detection?.audioSampleRate ?? 16000,
+    minContactConfidence: parsed?.detection?.minContactConfidence ?? 0.55
   },
   tracking: {
     objectDetectorEnabled: parsed?.tracking?.objectDetectorEnabled ?? true,
     objectDetectorModel: parsed?.tracking?.objectDetectorModel ?? 'Davidsv/CourtSide-Computer-Vision-v1',
     objectDetectorConfidence: parsed?.tracking?.objectDetectorConfidence ?? 0.15,
     objectDetectorImageSize: parsed?.tracking?.objectDetectorImageSize ?? 960,
-    objectDetectorRetryUnavailable: parsed?.tracking?.objectDetectorRetryUnavailable ?? true
+    objectDetectorRetryUnavailable: parsed?.tracking?.objectDetectorRetryUnavailable ?? true,
+    objectBallSource: parsed?.tracking?.objectBallSource ?? 'hough',
+    objectRacketSource: parsed?.tracking?.objectRacketSource ?? 'yolo_fallback_pose'
   },
   output: parsed.defaultOutput ?? { aspectRatio: '16:9', resolution: '1280x720', fps: 60 },
   proPlayers: parsed.proPlayers ?? [],
@@ -96,14 +99,17 @@ export function reloadConfigFromDisk() {
     audioAssistEnabled: next?.detection?.audioAssistEnabled ?? config.detection?.audioAssistEnabled ?? true,
     audioAssistWeight: next?.detection?.audioAssistWeight ?? config.detection?.audioAssistWeight ?? 0.05,
     audioAssistWindowMs: next?.detection?.audioAssistWindowMs ?? config.detection?.audioAssistWindowMs ?? 45,
-    audioSampleRate: next?.detection?.audioSampleRate ?? config.detection?.audioSampleRate ?? 16000
+    audioSampleRate: next?.detection?.audioSampleRate ?? config.detection?.audioSampleRate ?? 16000,
+    minContactConfidence: next?.detection?.minContactConfidence ?? config.detection?.minContactConfidence ?? 0.55
   };
   config.tracking = {
     objectDetectorEnabled: next?.tracking?.objectDetectorEnabled ?? config.tracking?.objectDetectorEnabled ?? true,
     objectDetectorModel: next?.tracking?.objectDetectorModel ?? config.tracking?.objectDetectorModel ?? 'Davidsv/CourtSide-Computer-Vision-v1',
     objectDetectorConfidence: next?.tracking?.objectDetectorConfidence ?? config.tracking?.objectDetectorConfidence ?? 0.15,
     objectDetectorImageSize: next?.tracking?.objectDetectorImageSize ?? config.tracking?.objectDetectorImageSize ?? 960,
-    objectDetectorRetryUnavailable: next?.tracking?.objectDetectorRetryUnavailable ?? config.tracking?.objectDetectorRetryUnavailable ?? true
+    objectDetectorRetryUnavailable: next?.tracking?.objectDetectorRetryUnavailable ?? config.tracking?.objectDetectorRetryUnavailable ?? true,
+    objectBallSource: next?.tracking?.objectBallSource ?? config.tracking?.objectBallSource ?? 'hough',
+    objectRacketSource: next?.tracking?.objectRacketSource ?? config.tracking?.objectRacketSource ?? 'yolo_fallback_pose'
   };
   config.output = next.defaultOutput ?? config.output ?? { aspectRatio: '16:9', resolution: '1280x720', fps: 60 };
   config.proPlayers = next.proPlayers ?? [];

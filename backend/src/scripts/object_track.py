@@ -9,7 +9,7 @@ import sys
 import cv2
 
 
-TRACKER_VERSION = "pose-yolo-courtside-v1"
+TRACKER_VERSION = "pose-yolo-source-modes-v1"
 
 
 def parse_args():
@@ -21,6 +21,18 @@ def parse_args():
     parser.add_argument("--conf", type=float, default=0.15, help="YOLO confidence threshold")
     parser.add_argument("--imgsz", type=int, default=960, help="YOLO inference image size")
     parser.add_argument("--wrist-hand", default="right", choices=["right", "left"], help="Hitting wrist hand")
+    parser.add_argument(
+        "--ball-source",
+        default="yolo_fallback_hough",
+        choices=["hough", "yolo", "yolo_fallback_hough"],
+        help="Canonical ballTrack source",
+    )
+    parser.add_argument(
+        "--racket-source",
+        default="yolo_fallback_pose",
+        choices=["pose", "yolo", "yolo_fallback_pose"],
+        help="Canonical racketTrack source",
+    )
     return parser.parse_args()
 
 
@@ -263,30 +275,48 @@ def augment_tracks(args):
             "racketCandidateCount": len(racket_candidates),
         }
 
+        hough_ball = hough_ball_track[frame_idx] if frame_idx < len(hough_ball_track) else None
         ball_det = pick_ball(ball_candidates, prev_ball, prev_prev_ball, wrist, diag)
         if ball_det:
             point = ball_det["point"]
             yolo_ball_track[frame_idx] = point
-            fused_ball_track[frame_idx] = point
             prev_prev_ball = prev_ball
             prev_ball = point
+
+        if args.ball_source == "hough":
+            fused_ball_track[frame_idx] = hough_ball
+            diag["ballSource"] = "hough_configured" if hough_ball else "missing"
+        elif args.ball_source == "yolo":
+            fused_ball_track[frame_idx] = yolo_ball_track[frame_idx]
+            diag["ballSource"] = "yolo_configured" if yolo_ball_track[frame_idx] else "missing"
+        elif yolo_ball_track[frame_idx]:
+            fused_ball_track[frame_idx] = yolo_ball_track[frame_idx]
             diag["ballSource"] = "yolo"
-        elif frame_idx < len(hough_ball_track) and hough_ball_track[frame_idx]:
-            fused_ball_track[frame_idx] = hough_ball_track[frame_idx]
+        elif hough_ball:
+            fused_ball_track[frame_idx] = hough_ball
             diag["ballSource"] = "hough_fallback"
         else:
             diag["ballSource"] = "missing"
 
+        pose_racket = wrist
         racket_det = pick_racket(racket_candidates, wrist, prev_racket)
         if racket_det:
             point = racket_det["point"]
             yolo_racket_track[frame_idx] = point
-            fused_racket_track[frame_idx] = point
             prev_racket = point
-            diag["racketSource"] = "yolo"
             diag["racketConfidence"] = round(float(racket_det["confidence"]), 4)
-        elif wrist:
-            fused_racket_track[frame_idx] = wrist
+
+        if args.racket_source == "pose":
+            fused_racket_track[frame_idx] = pose_racket
+            diag["racketSource"] = "pose_configured" if pose_racket else "missing"
+        elif args.racket_source == "yolo":
+            fused_racket_track[frame_idx] = yolo_racket_track[frame_idx]
+            diag["racketSource"] = "yolo_configured" if yolo_racket_track[frame_idx] else "missing"
+        elif yolo_racket_track[frame_idx]:
+            fused_racket_track[frame_idx] = yolo_racket_track[frame_idx]
+            diag["racketSource"] = "yolo"
+        elif pose_racket:
+            fused_racket_track[frame_idx] = pose_racket
             diag["racketSource"] = "pose_fallback"
         else:
             diag["racketSource"] = "missing"
@@ -323,6 +353,8 @@ def augment_tracks(args):
         "totalFrames": int(total),
         "ballYoloFrames": int(ball_yolo_count),
         "racketYoloFrames": int(racket_yolo_count),
+        "ballSource": args.ball_source,
+        "racketSource": args.racket_source,
     }
     tracks["trackerMeta"] = {
         **(tracks.get("trackerMeta") or {}),
@@ -330,6 +362,8 @@ def augment_tracks(args):
         "version": TRACKER_VERSION,
         "objectDetectorEnabled": True,
         "objectDetectorModel": args.model,
+        "objectBallSource": args.ball_source,
+        "objectRacketSource": args.racket_source,
     }
     return tracks
 

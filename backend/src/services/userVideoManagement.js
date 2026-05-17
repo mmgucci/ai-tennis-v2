@@ -219,6 +219,38 @@ function confidenceHistogramFromWindows(windowDebug) {
   return bins;
 }
 
+function summarizeDetectionStatus(windowDebug, mergedContacts) {
+  if (Array.isArray(mergedContacts) && mergedContacts.length > 0) {
+    return {
+      status: 'serve_contact_detected',
+      reason: 'accepted_contact_candidates'
+    };
+  }
+  const attempts = (windowDebug || []).flatMap((w) => Array.isArray(w?.attempts) ? w.attempts : []);
+  const hasLowConfidenceCandidate = attempts.some((a) => {
+    const confidence = Number(a?.confidence);
+    const reason = String(a?.reason || '').toLowerCase();
+    return Boolean(a?.found) || reason.includes('low_confidence') || (Number.isFinite(confidence) && confidence > 0);
+  });
+  const hasNoServeSignal = attempts.some((a) => String(a?.noDetectionTag || '').toLowerCase() === 'no_serve');
+  if (hasLowConfidenceCandidate) {
+    return {
+      status: 'no_contact_point_detected',
+      reason: 'all_candidates_below_confidence_threshold'
+    };
+  }
+  if (hasNoServeSignal) {
+    return {
+      status: 'no_serve_detected',
+      reason: 'serve_phase_not_detected'
+    };
+  }
+  return {
+    status: 'no_serve_detected',
+    reason: 'no_contact_candidates'
+  };
+}
+
 function normalizeStore(store) {
   if (!store || typeof store !== 'object') {
     return {
@@ -375,6 +407,7 @@ export async function scanAndExtractServeClips({
         timestampMs: Number.isFinite(Number(result?.event?.timestampMs)) ? Math.round(Number(result.event.timestampMs)) : null,
         confidence: Number.isFinite(Number(result?.event?.confidence)) ? Number(result.event.confidence) : null,
         reason: result?.event?.reason || null,
+        noDetectionTag: result?.event?.noDetectionTag || null,
         mode: result?.event?.diagnostics?.mode || null,
         trackingSource: result?.trackingSource || null,
         trackerVersion: String(result?.trackMeta?.version || '').trim() || null,
@@ -488,10 +521,13 @@ export async function scanAndExtractServeClips({
   }
   const extractionMs = Date.now() - extractionStartedAtMs;
   const processingMs = Date.now() - processingStartedAtMs;
+  const detectionStatus = summarizeDetectionStatus(windowDebug, merged);
 
   const entry = await appendUserVideoManagementEntry({
     id: runId,
     createdAt: nowIso(),
+    detectionStatus: detectionStatus.status,
+    detectionReason: detectionStatus.reason,
     sourceFileName: String(sourceFileName || path.basename(inputVideoPath)),
     sourcePublicUrl: `/files/uploads/${path.basename(inputVideoPath)}`,
     sourceDurationSec: Number(durationSec.toFixed(3)),
@@ -500,10 +536,11 @@ export async function scanAndExtractServeClips({
     scanConfig: {
       scanWindowSec,
       scanStepSec,
-      confidenceThreshold,
-      preContactSec,
-      postContactSec
-    },
+        confidenceThreshold,
+        preContactSec,
+        postContactSec,
+        minContactConfidence: Number(config?.detection?.minContactConfidence ?? confidenceThreshold)
+      },
     candidateWindowsScanned: windows.length,
     candidateContactsFound: candidateContacts.length,
     extractedClips: clips,

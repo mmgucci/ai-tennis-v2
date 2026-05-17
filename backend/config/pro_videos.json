@@ -5,6 +5,23 @@
     "resolution": "1280x720",
     "fps": 60
   },
+  "detection": {
+    "useBallForContact": false,
+    "audioAssistEnabled": true,
+    "audioAssistWeight": 0.05,
+    "audioAssistWindowMs": 45,
+    "audioSampleRate": 16000,
+    "minContactConfidence": 0.55
+  },
+  "tracking": {
+    "objectDetectorEnabled": true,
+    "objectDetectorModel": "Davidsv/CourtSide-Computer-Vision-v1",
+    "objectDetectorConfidence": 0.15,
+    "objectDetectorImageSize": 960,
+    "objectDetectorRetryUnavailable": true,
+    "objectBallSource": "hough",
+    "objectRacketSource": "pose"
+  },
   "proVideos": [
     {
       "id": "novak-1",

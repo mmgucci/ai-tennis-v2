@@ -219,6 +219,7 @@ export async function processVideoForContact(videoPath, detectionContext = {}, p
       audioAssistEnabled,
       audioAssistWeight: Number(config?.detection?.audioAssistWeight ?? 0.14),
       audioAssistWindowMs: Number(config?.detection?.audioAssistWindowMs ?? 45),
+      minContactConfidence: Number(config?.detection?.minContactConfidence ?? 0.55),
       debugCaptureCandidates: Boolean(processingOptions?.debugCaptureCandidates)
     }
   });

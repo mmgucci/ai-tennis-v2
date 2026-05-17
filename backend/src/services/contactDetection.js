@@ -24,6 +24,90 @@ function clamp01(x) {
   return Math.max(0, Math.min(1, x));
 }
 
+function resolveMinContactConfidence(detectionOptions = {}) {
+  const raw = Number(detectionOptions?.minContactConfidence);
+  if (!Number.isFinite(raw)) return 0.35;
+  return clamp01(raw);
+}
+
+function classifyNoDetectionTag(event, context = {}) {
+  const strokeType = String(context?.strokeType || 'serve').toLowerCase();
+  if (strokeType !== 'serve') return 'no_contact';
+  const reason = String(event?.reason || '').toLowerCase();
+  const diagnostics = event?.diagnostics || {};
+  const fallbackFrom = String(diagnostics?.fallbackFrom || '').toLowerCase();
+  const serveMissingReasons = new Set([
+    'insufficient_ball_track',
+    'no_apex_detected',
+    'no_baseline_detected',
+    'toss_not_detected',
+    'invalid_toss_window',
+    'no_valid_racket_frames_in_fallback_window',
+    'no_plausible_racket_frames_in_fallback_window',
+    'no_valid_ball_racket_frames_in_late_phase',
+    'missing_track_data'
+  ]);
+  if (serveMissingReasons.has(reason) || serveMissingReasons.has(fallbackFrom)) {
+    return 'no_serve';
+  }
+  return 'no_contact';
+}
+
+function finalizeContactEvent(event, { context = {}, detectionOptions = {} } = {}) {
+  const minContactConfidence = resolveMinContactConfidence(detectionOptions);
+  if (!event || typeof event !== 'object') {
+    return {
+      found: false,
+      confidence: 0,
+      reason: 'no_contact_event',
+      noDetectionTag: 'no_contact',
+      diagnostics: {
+        minContactConfidence
+      }
+    };
+  }
+
+  const confidence = Number(event?.confidence);
+  if (event.found && Number.isFinite(confidence) && confidence < minContactConfidence) {
+    return {
+      ...event,
+      found: false,
+      frame: null,
+      timestampMs: null,
+      reason: 'low_confidence_no_contact',
+      noDetectionTag: 'no_contact',
+      diagnostics: {
+        ...(event.diagnostics || {}),
+        rejectedFrame: Number.isFinite(Number(event.frame)) ? Number(event.frame) : null,
+        rejectedTimestampMs: Number.isFinite(Number(event.timestampMs)) ? Number(event.timestampMs) : null,
+        rejectedConfidence: confidence,
+        minContactConfidence
+      }
+    };
+  }
+
+  if (!event.found) {
+    const noDetectionTag = classifyNoDetectionTag(event, context);
+    return {
+      ...event,
+      noDetectionTag,
+      diagnostics: {
+        ...(event.diagnostics || {}),
+        minContactConfidence
+      }
+    };
+  }
+
+  return {
+    ...event,
+    noDetectionTag: null,
+    diagnostics: {
+      ...(event.diagnostics || {}),
+      minContactConfidence
+    }
+  };
+}
+
 function pushLimited(arr, value, max = 500) {
   if (!Array.isArray(arr)) return;
   if (arr.length >= max) return;
@@ -725,7 +809,7 @@ function detectLatePhaseBallRacketFallback({ ballTrack, racketTrack, fps, length
   };
 }
 
-export function detectContactEvent({
+function detectContactEventCore({
   ballTrack,
   racketTrack,
   poseTrack = [],
@@ -736,15 +820,6 @@ export function detectContactEvent({
   audioPeaks = [],
   detectionOptions = {}
 }) {
-  if (!Array.isArray(ballTrack) || !Array.isArray(racketTrack) || ballTrack.length === 0 || racketTrack.length === 0) {
-    return {
-      found: false,
-      confidence: 0,
-      reason: 'missing_track_data'
-    };
-  }
-
-  const length = Math.min(ballTrack.length, racketTrack.length);
   const strokeType = String(context?.strokeType || 'serve').toLowerCase();
   const handedness = String(context?.handedness || 'right').toLowerCase();
   const courtSide = String(context?.courtSide || '').toLowerCase();
@@ -756,6 +831,14 @@ export function detectContactEvent({
   const debugCaptureCandidates = Boolean(detectionOptions?.debugCaptureCandidates);
 
   if (strokeType === 'serve' && !enableBallGuidedPath) {
+    if (!Array.isArray(racketTrack) || racketTrack.length === 0) {
+      return {
+        found: false,
+        confidence: 0,
+        reason: 'missing_racket_track_data'
+      };
+    }
+    const length = racketTrack.length;
     const poseOnly = detectRacketApexFallback({
       racketTrack,
       poseTrack,
@@ -848,6 +931,16 @@ export function detectContactEvent({
       diagnostics: baseDiagnostics
     };
   }
+
+  if (!Array.isArray(ballTrack) || !Array.isArray(racketTrack) || ballTrack.length === 0 || racketTrack.length === 0) {
+    return {
+      found: false,
+      confidence: 0,
+      reason: 'missing_track_data'
+    };
+  }
+
+  const length = Math.min(ballTrack.length, racketTrack.length);
 
   const tossWindow = detectServeTossWindow({ ballTrack, fps, height, length });
   if (!tossWindow.ok) {
@@ -1218,4 +1311,8 @@ export function detectContactEvent({
         : {})
     }
   };
+}
+
+export function detectContactEvent(args = {}) {
+  return finalizeContactEvent(detectContactEventCore(args), args);
 }

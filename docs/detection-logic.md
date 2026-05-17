@@ -8,55 +8,83 @@ When logic changes in that file, update this document in the same change.
 
 - Primary target: tennis serve contact frame detection.
 - Main inputs:
-  - `ballTrack` (per-frame fused ball points; CourtSide YOLO `tennis_ball` when available, OpenCV/Hough fallback otherwise)
-  - `racketTrack` (per-frame fused racket proxy points; CourtSide YOLO `racket` when available, pose wrist fallback otherwise)
+  - `racketTrack` (per-frame fused racket proxy points; currently pose wrist proxy for contact detection)
   - `poseTrack` (per-frame pose landmarks; used for serve arm plausibility checks)
   - `fps`, `width`, `height`
   - `context`: `strokeType`, `handedness`, `courtSide`
   - optional `audioPeaks` and `detectionOptions`
 
+Ball tracks may still be generated and visualized for debugging, but serve contact detection no longer consumes ball position, ball-racket distance, ball velocity, or ball-derived confidence scoring.
+
 ## Tracking Inputs
 
-Track generation now runs a pose/OpenCV pass for fresh `*.tracks.json` sidecars:
+Track generation now runs two detection passes for fresh `*.tracks.json` sidecars:
 
 1. Pose/OpenCV pass (`backend/src/scripts/auto_track.py`)
 - Produces `poseTrack`, pose wrist proxy racket points, and OpenCV/Hough ball candidates.
-- Writes the canonical `ballTrack`, `racketTrack`, and `poseTrack` consumed by contact detection.
+- Preserved in sidecars as `poseRacketTrack` and `houghBallTrack` after object augmentation.
 
-- `ballTrack`: OpenCV/Hough ball point.
-- `racketTrack`: pose wrist proxy / tracker fallback point.
+2. CourtSide YOLO object pass (`backend/src/scripts/object_track.py`)
+- Uses the pretrained Ultralytics model `Davidsv/CourtSide-Computer-Vision-v1` by default.
+- Reads the pose sidecar and runs object detection for `tennis_ball` and `racket`.
+- Selects the racket candidate using confidence plus proximity to the hitting wrist and previous racket point.
+- Writes raw object detections and diagnostics to:
+  - `objectDetections`
+  - `objectFrameDiagnostics`
+  - `objectBallTrack`
+  - `objectRacketTrack`
+  - `objectDetectorMeta`
+
+The object pass always writes raw YOLO tracks, but the canonical tracks consumed by contact detection are source-configurable:
+
+- `ballTrack`: controlled by `tracking.objectBallSource`.
+  - `hough`: OpenCV/Hough ball point only. This is the current ball-control experiment default.
+  - `yolo`: YOLO ball point only.
+  - `yolo_fallback_hough`: YOLO ball point when available, otherwise OpenCV/Hough ball point.
+- `racketTrack`: controlled by `tracking.objectRacketSource`.
+  - `pose`: pose wrist proxy only. This is the current ball-control experiment default.
+  - `yolo`: YOLO racket point only.
+  - `yolo_fallback_pose`: YOLO racket point when available, otherwise pose wrist proxy.
 - `poseTrack`: always retained as the serve/body phase signal.
+
+Current contact-detection policy:
+
+- `detection.useBallForContact=false`.
+- Ball tracks are ignored by serve contact detection.
+- The active serve path is pose/racket apex detection plus optional audio assist.
+- Ball-guided toss windows, ball-racket distance scoring, and ball velocity scoring remain in legacy code only for explicitly re-enabling experiments.
 
 ## High-Level Flow
 
 1. Validate tracks.
-- If `ballTrack` or `racketTrack` is missing/empty, return `found: false`, reason `missing_track_data`.
+- In the active serve path, require only `racketTrack`.
+- If `racketTrack` is missing/empty, return `found: false`, reason `missing_racket_track_data`.
 
 2. Resolve profile/options.
 - `isRightHandServeAdSide` is true for `serve + right + ad`.
-- `useBallForContact` defaults to false in project config, so pose-first is the default production path.
+- `useBallForContact=false` in current config, so serve detection bypasses all ball-guided logic.
 - `audioAssistEnabled` only applies for serves.
-- Even in pose-first mode, `ballTrack` and `racketTrack` may be YOLO-assisted fused tracks.
+- `minContactConfidence=0.55` is the final acceptance threshold used by app processing; candidates below it are reported as not found instead of being shown as contact points.
 
-3. Ball-disabled branch.
+3. Pose/racket primary branch.
 - If `strokeType=serve` and `useBallForContact=false`:
-  - Run pose-only fallback: `detectRacketApexFallback`.
-  - Optionally apply local audio-based frame shift around pose frame.
-  - Return diagnostics `switchedFrom: ball_disabled_pose_primary`.
+  - Run `detectRacketApexFallback`.
+  - Optionally apply local audio-based frame shift around the pose/racket frame.
+  - Return diagnostics `path: pose_primary`.
 
-4. Serve toss window attempt.
+4. Legacy ball-guided branch (disabled by current config).
 - Run `detectServeTossWindow`.
 - If toss window fails:
   - Try `detectRacketApexFallback`.
   - If not left-handed serve, then try `detectLatePhaseBallRacketFallback`.
   - Return failure with toss-window reason if no fallback succeeds.
 
-5. Build search window from toss.
+5. Legacy ball-guided search window.
 - Start from toss window (`mode: toss_window`).
 - Low/very-low toss handling can move `windowStart` later and optionally narrow around a racket apex candidate from `selectServeApexWindow`.
 - Right-handed ad-side serves tighten `windowEnd` near toss apex.
 
-6. Score candidates in search window.
+6. Legacy ball-guided scoring.
 - For each valid frame with both ball and racket:
   - Serve-only hard gate: reject frames where pose indicates the hitting arm is clearly hanging down (`armRejectedCandidates`).
   - `distScore`: relative+absolute ball-racket distance.
@@ -71,7 +99,8 @@ Track generation now runs a pose/OpenCV pass for fresh `*.tracks.json` sidecars:
 - Choose frame with max combined score.
 - Confidence is geometry-based score (plus limited audio contribution).
 - Damp confidence near clip edges.
-- Require confidence >= `0.35`.
+- Internal branch-level guards still reject clearly weak candidates around `0.35`.
+- Final app-level acceptance requires confidence >= `minContactConfidence` (`0.55` in current config). If a lower-confidence frame was selected, the event is converted to `found: false`, `reason: low_confidence_no_contact`, and diagnostics keep the rejected frame/timestamp/confidence.
 
 8. Plausibility reroutes.
 - If serve result is implausibly early (`<30%` clip), switch to late-phase fallback when available (`switchedFrom: implausibly_early_toss_window_pick`).
@@ -79,6 +108,9 @@ Track generation now runs a pose/OpenCV pass for fresh `*.tracks.json` sidecars:
 
 9. Return final event.
 - `frame`, `timestampMs`, `confidence`, and `diagnostics`.
+- Missing/low-confidence events include `noDetectionTag`:
+  - `no_contact` when a candidate exists but is too weak or no reliable contact point is available.
+  - `no_serve` when serve-phase evidence such as toss/track/apex data is missing.
 
 ## Detailed Components
 
@@ -185,14 +217,17 @@ Ball-disabled branch:
 Common `diagnostics.mode` values:
 - `pose_extension_primary`
 - `pose_apex_secondary`
-- `ball_late_phase_secondary`
-- (main toss-window path has no explicit named mode)
+- `ball_late_phase_secondary` (legacy disabled branch)
+- (legacy main toss-window path has no explicit named mode)
 
 Common switch/fallback tags:
 - `fallbackFrom: <toss_window_failure_reason>`
-- `switchedFrom: ball_disabled_pose_primary`
-- `switchedFrom: implausibly_early_toss_window_pick`
-- `switchedFrom: weak_ball_racket_proximity_ad_side`
+- `switchedFrom: ball_disabled_pose_primary` / `path: pose_primary`
+- `switchedFrom: implausibly_early_toss_window_pick` (legacy disabled branch)
+- `switchedFrom: weak_ball_racket_proximity_ad_side` (legacy disabled branch)
+- `reason: low_confidence_no_contact`
+- `noDetectionTag: no_contact`
+- `noDetectionTag: no_serve`
 
 Additional path tag:
 - `path: pose_primary` when serve detection runs in default pose-first mode (`useBallForContact=false`).
@@ -201,9 +236,13 @@ Additional path tag:
 
 - `earlyBiasFrames` is currently `0` (disabled).
 - `audioAssistWeight` defaults from options and is clamped.
-- Confidence threshold for `found` is `0.35`.
+- Internal branch-level confidence guards still use `0.35` for clearly invalid candidates.
+- Final app-level acceptance threshold is `minContactConfidence=0.55`; this prevents every clip/window from displaying a contact marker merely because the scorer can rank a best available frame.
+- Ball tracking is intentionally excluded from serve contact detection because the observed YOLO/Hough ball tracks are not reliable enough for model decisions.
+- Pro diagnostics use the same detector output as user video processing, but curated pro clips with manual ground truth treat `found: false` as a missed detection. The summary keeps those clips in `evaluatedWithGroundTruth`, increments `missedDetections`, and assigns a miss penalty equal to the clip frame count for aggregate error metrics.
 - Tracker-side motion fallback is subject-gated: if subject gate is closed (`allowPoseTrack=false`), motion fallback no longer injects racket points.
-- Fresh track generation uses the MediaPipe/OpenCV pose pass only. The CourtSide YOLO object pass is currently not part of the canonical track-generation path.
+- Fresh track generation attempts both the MediaPipe/OpenCV pose pass and the CourtSide YOLO object pass. If the YOLO runtime/model is unavailable, the sidecar records `objectRuntimeAvailable: false`; with the default retry setting, freshness checks keep treating that sidecar as needing regeneration so installing the dependency/model can upgrade it without a code change.
+- Tracker cache freshness includes the object detector model and configured canonical source modes (`tracking.objectBallSource`, `tracking.objectRacketSource`) so changing lanes regenerates sidecars.
 
 ## Update Rule
 
